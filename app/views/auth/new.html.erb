@@ -1,0 +1,34 @@
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Sign Up</h2>
+
+        <%= form_with(model: @user, url: signup_path, local: true, class: "auth-form") do |f| %>
+        <% if flash[:error].present? %>
+        <div class="error-message">
+            <%= flash[:error] %>
+        </div>
+        <% end %>
+
+        <div class="form-group">
+            <%= f.label :email %>
+            <%= f.email_field :email, class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :password %>
+            <%= f.password_field :password, class: "form-control" %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :password_confirmation, "Confirm Password" %>
+            <%= f.password_field :password_confirmation, class: "form-control" %>
+        </div>
+
+        <%= f.submit "Sign Up", class: "submit-button" %>
+        <% end %>
+
+        <div class="auth-links">
+            Already have an account? <%= link_to "Sign In", signin_path %>
+        </div>
+    </div>
+</div>

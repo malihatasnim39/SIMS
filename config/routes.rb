@@ -1,4 +1,17 @@
 Rails.application.routes.draw do
+  root "financial_records#expenseForm"
+  resources :financial_records, only: [ :new, :create ]
+
+  resources :equipments do
+    get "club_info", on: :member
+  end
+
+  resources :financial_records do
+    collection do
+      get "fetch_clubs"
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -37,6 +37,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_10_031703) do
     t.timestamptz "Created_At", default: -> { "now()" }, null: false
     t.datetime "Updated_At", precision: nil
     t.string "Club_Name", null: false
+    t.bigint "Parent_Club"
 
     t.unique_constraint ["Club_ID"], name: "Club_Club_ID_key"
   end
@@ -44,7 +45,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_10_031703) do
   create_table "equipments", primary_key: "Equipment_ID", id: :bigint, default: nil, force: :cascade do |t|
     t.bigint "Vendor_ID", null: false
     t.bigint "Club_ID"
-    t.bigint "Transaction_ID"
+    t.bigint "Financial_Record_Id"
     t.timestamptz "Created_At", default: -> { "now()" }, null: false
     t.datetime "Edited_At", precision: nil
     t.string "Equipment_Name", null: false
@@ -74,8 +75,9 @@ ActiveRecord::Schema[8.0].define(version: 2024_11_10_031703) do
     t.unique_constraint ["Vendor_ID"], name: "Vendor_Vendor_ID_key"
   end
 
+  add_foreign_key "clubs", "clubs", column: "Parent_Club", primary_key: "Club_ID", name: "clubs_Parent_Club_fkey"
   add_foreign_key "equipments", "clubs", column: "Club_ID", primary_key: "Club_ID", name: "Equipment_Club_ID_fkey"
-  add_foreign_key "equipments", "financial_records", column: "Transaction_ID", primary_key: "Financial_Record_ID", name: "Equipment_Transaction_ID_fkey"
+  add_foreign_key "equipments", "financial_records", column: "Financial_Record_Id", primary_key: "Financial_Record_ID", name: "Equipment_Transaction_ID_fkey"
   add_foreign_key "equipments", "vendors", column: "Vendor_ID", primary_key: "Vendor_ID", name: "Equipment_Vendor_ID_fkey"
   add_foreign_key "financial_records", "equipments", column: "Equipment_ID", primary_key: "Equipment_ID", name: "Financial_Record_Equipment_ID_fkey"
   add_foreign_key "financial_records", "vendors", column: "Vendor_ID", primary_key: "Vendor_ID", name: "Financial_Record_Vendor_ID_fkey"

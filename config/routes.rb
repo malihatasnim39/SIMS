@@ -6,11 +6,6 @@ Rails.application.routes.draw do
     get "club_info", on: :member
   end
 
-  resources :financial_records do
-    collection do
-      get "fetch_clubs"
-    end
-  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

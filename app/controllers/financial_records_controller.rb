@@ -7,15 +7,13 @@ class FinancialRecordsController < ApplicationController
     @financial_record = FinancialRecord.new(financial_record_params)
 
     if @financial_record.save
-      flash[:notice] = "Financial record created successfully!"
       redirect_to root_path
     else
-      flash.now[:alert] = "Error creating financial record."
-      render :new
+      render :expenseForm
     end
   end
 
   def financial_record_params
-    params.require(:financial_record).permit(:Title, :Amount, :Vendor_ID, :Equipment_ID, :Quantity)
+    params.require(:financial_record).permit(:Title, :Amount, :Vendor_ID, :Equipment_ID, :Quantity, :Club_ID)
   end
 end

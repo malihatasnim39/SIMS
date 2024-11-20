@@ -17,6 +17,7 @@
                              :Equipment_Name, 
                              { prompt: "Equipment" }, 
                              { id: "financial_record_equipment_id" } %>
+    <%= form.collection_select :Club_ID, Club.where(Is_Super_Club: false), :id, :Club_Name, { prompt: "Sub-Club" }%>
   </div>
 
   <div>

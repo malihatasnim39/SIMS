@@ -11,7 +11,7 @@ class EquipmentsController < ApplicationController
   def create
     @equipment = Equipment.new(equipment_params)
 
-    if @equipment_create.save
+    if @equipment.save
       redirect_to @equipment, notice: "Equipment added successfully!"
     else
       render :index, status: :unprocessable_entity

@@ -1,0 +1,50 @@
+<h1 style="text-align: center;">Borrowing Page</h1>
+
+<div style="display: flex; justify-content: space-between; padding: 10px;">
+  <button style="padding: 5px;">&#8592; Back</button>
+  <div style="display: flex; gap: 10px;">
+    <input type="text" placeholder="Search" style="padding: 5px; width: 200px;">
+    <button style="padding: 5px;">🔍</button>
+  </div>
+  <button style="padding: 5px;">👤 Profile</button>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <%= link_to 'Add Borrowing Record', new_borrowing_path, style: 'padding: 10px; background-color: yellow; border: none; text-decoration: none;' %>
+</div>
+
+<h2 style="margin-left: 10px;">Overdue Items</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
+  <% if @overdue_items.present? %>
+    <% @overdue_items.each do |item| %>
+      <div style="border: 1px solid black; padding: 10px; width: 200px; background-color: #f0f0f0;">
+        <h3><%= item.equipment_name || "Unknown Item" %></h3>
+        <p>
+          Overdue by: 
+          <%= item.due_date ? (Date.today - item.due_date.to_date).to_i : "N/A" %> days
+        </p>
+        <div>
+          <span>🔔 Notify Placeholder</span>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p style="margin-left: 10px;">No overdue items at the moment.</p>
+  <% end %>
+</div>
+
+<h2 style="margin-left: 10px;">All Borrowing Records</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
+  <% @borrowings.each do |borrowing| %>
+    <div style="border: 1px solid black; padding: 10px; width: 200px; background-color: #f0f0f0;">
+      <h3><%= borrowing.equipment_name %></h3>
+      <p>Date: 
+        <%= borrowing.borrow_date.present? ? borrowing.borrow_date.strftime('%d/%m/%Y') : "Not available" %> - 
+        <%= borrowing.due_date.present? ? borrowing.due_date.strftime('%d/%m/%Y') : "Not available" %>
+      </p>
+      <p>
+        <%= link_to "Edit", edit_borrowing_path(borrowing), style: "padding: 5px; background-color: blue; color: white; text-decoration: none;" %>
+      </p>
+    </div>
+  <% end %>
+</div>

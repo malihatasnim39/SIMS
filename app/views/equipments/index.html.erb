@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment Dashboard</title>
+  <%= stylesheet_link_tag '\application', media: 'all', data: { turbolinks: false } %>
+  <%= javascript_include_tag 'application', type: 'module' %>
+</head>
+<body>
+
+<header>
+  <%= image_tag 'back-icon.png', alt: 'Back', style: 'width: 20px; cursor: pointer;' %>
+  <div class="search-bar">
+    <input type="text" placeholder="Search">
+  </div>
+  <%= image_tag 'user-icon.png', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
+</header>
+
+<div class="container">
+  <div class="sort">
+    <span>Sorted by Availability</span>
+    <span>
+      <%= image_tag 'filter-icon.png', alt: 'Filter', style: 'width: 20px;' %>
+    </span>
+  </div>
+  <div class="cards">
+    <!-- Loop through equipment items -->
+    <% @equipments.each do |equipment| %>
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title"><%= equipment.Equipment_Name %></div>
+          <div class="quantity">Quantity: <%= @equipment.where(Equipment_Name: equipment.Equipment_Name ).size %></div>
+        </div>
+        <%= image_tag 'arrow-icon.png', alt: 'Go', style: 'width: 20px; height: 20px;' %>
+      </div>
+    <% end %>
+    <!-- "+" card to open the modal -->
+    <div class="card add-card">
+      <%= link_to "+", new_equipment_path, class: "add-link" %>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <button class="active">Equipment</button>
+  <button>Borrow</button>
+  <button>Vendors</button>
+</div>
+
+</body>
+</html>

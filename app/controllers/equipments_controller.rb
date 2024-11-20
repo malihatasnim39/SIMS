@@ -4,6 +4,10 @@ class EquipmentsController < ApplicationController
     @equipment = Equipment
   end
 
+  def show
+    @equipment = Equipment.find(params[:id])
+  end
+
   def new
     @equipment = Equipment.new
   end
@@ -16,6 +20,27 @@ class EquipmentsController < ApplicationController
     else
       render :index, status: :unprocessable_entity
     end
+  end
+
+  def edit
+    @equipment = Equipment.find(params[:id])
+  end
+
+  def update
+    @equipment = Equipment.find(params[:id])
+
+    if @equipment.update(equipment_params)
+      redirect_to @equipment
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @equipment = Equipment.find(params[:id])
+    @equipment.destroy
+
+    redirect_to root_path, status: :see_other
   end
 
   private

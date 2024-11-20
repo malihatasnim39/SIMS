@@ -1,0 +1,9 @@
+<h1><%= @equipment.Equipment_Name %></h1>
+
+<ul>
+  <li><%= link_to "Edit", edit_equipment_path(@equipment) %></li>
+  <li><%= link_to "Destroy", equipment_path(@equipment), data: {
+    turbo_method: :delete,
+    turbo_confirm: "Are you sure?"
+  } %></li>
+</ul>

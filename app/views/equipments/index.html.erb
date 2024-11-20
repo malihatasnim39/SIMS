@@ -32,7 +32,7 @@
           <div class="card-title"><%= equipment.Equipment_Name %></div>
           <div class="quantity">Quantity: <%= @equipment.where(Equipment_Name: equipment.Equipment_Name ).size %></div>
         </div>
-        <%= image_tag 'arrow-icon.png', alt: 'Go', style: 'width: 20px; height: 20px;' %>
+        <%= link_to ">", equipment, class: "add-link" %>
       </div>
     <% end %>
     <!-- "+" card to open the modal -->

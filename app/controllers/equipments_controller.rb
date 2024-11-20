@@ -18,7 +18,7 @@ class EquipmentsController < ApplicationController
     if @equipment.save
       redirect_to @equipment, notice: "Equipment added successfully!"
     else
-      render :index, status: :unprocessable_entity
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -30,7 +30,7 @@ class EquipmentsController < ApplicationController
     @equipment = Equipment.find(params[:id])
 
     if @equipment.update(equipment_params)
-      redirect_to @equipment
+      redirect_to @equipment, notice: "Equipment updated successfully!"
     else
       render :edit, status: :unprocessable_entity
     end

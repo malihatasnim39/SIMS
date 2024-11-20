@@ -1,10 +1,17 @@
 Rails.application.routes.draw do
-  root "financial_records#expenseForm"
-  resources :financial_records, only: [ :new, :create ]
+  root "financial_records#expenseDashboard"
+  resources :financial_records, only: [ :create ] do
+    collection do
+      get "expenseForm", to: "financial_records#expenseForm", as: :expense_form
+      get "expenseDashboard"
+    end
+  end
+
 
   resources :equipments do
     get "club_info", on: :member
   end
+
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

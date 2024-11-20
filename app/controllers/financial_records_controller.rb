@@ -3,6 +3,10 @@ class FinancialRecordsController < ApplicationController
     @financial_record = FinancialRecord.new
   end
 
+  def expenseDashboard
+    @financial_records = FinancialRecord.includes(:equipment, :club).order(Created_At: :desc)
+  end
+
   def create
     @financial_record = FinancialRecord.new(financial_record_params)
 

@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
   root "financial_records#expenseDashboard"
-  resources :financial_records, only: [ :create ] do
+  resources :financial_records, only: [ :create, :edit, :update, :index, :show ] do
     collection do
       get "expenseForm", to: "financial_records#expenseForm", as: :expense_form
       get "expenseDashboard"
+    end
+    member do
+      get "expense_details"
     end
   end
 

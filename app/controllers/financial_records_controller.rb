@@ -7,6 +7,10 @@ class FinancialRecordsController < ApplicationController
     @financial_records = FinancialRecord.includes(:equipment, :club).order(Created_At: :desc)
   end
 
+  def expense_details
+    @financial_record = FinancialRecord.includes(:club, :equipment, :vendor).find(params[:id])
+  end
+
   def create
     @financial_record = FinancialRecord.new(financial_record_params)
 
@@ -14,6 +18,19 @@ class FinancialRecordsController < ApplicationController
       redirect_to root_path
     else
       render :expenseForm
+    end
+  end
+
+  def edit
+    @financial_record = FinancialRecord.find(params[:id])
+  end
+
+  def update
+    @financial_record = FinancialRecord.find(params[:id])
+    if @financial_record.update(financial_record_params)
+      redirect_to expense_details_financial_record_path(@financial_record)
+    else
+      render :editExpense
     end
   end
 

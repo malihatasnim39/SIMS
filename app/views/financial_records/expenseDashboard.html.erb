@@ -19,7 +19,7 @@
   <tbody>
     <% @financial_records.each do |record| %>
       <tr>
-        <td><%= record.Title %></td>
+        <td><%= link_to record.Title, expense_details_financial_record_path(record) %></td>
         <td><%= record.equipment&.Equipment_Name || "N/A" %></td>
         <td><%= record.Quantity %></td>
         <td><%= record.club&.Club_Name || "N/A" %></td>

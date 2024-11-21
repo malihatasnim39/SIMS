@@ -10,6 +10,6 @@
   <!-- Buttons -->
   <div>
     <%= button_to 'Update', edit_financial_record_path, method: :get %>
-    <%= button_to 'Delete' %>
+    <%= button_to 'Delete', delete_confirmation_financial_record_path(@financial_record), method: :get %>
   </div>
 </div>

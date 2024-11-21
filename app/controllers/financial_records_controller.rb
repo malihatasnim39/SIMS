@@ -34,6 +34,19 @@ class FinancialRecordsController < ApplicationController
     end
   end
 
+  def destroy
+    @financial_record = FinancialRecord.find(params[:id])
+    if @financial_record.destroy
+      redirect_to expenseDashboard_financial_records_path
+    else
+      redirect_back(fallback_location: expense_details_financial_record_path(@financial_record))
+    end
+  end
+
+  def delete_confirmation
+    @financial_record = FinancialRecord.find(params[:id])
+  end
+
   def financial_record_params
     params.require(:financial_record).permit(:Title, :Amount, :Vendor_ID, :Equipment_ID, :Quantity, :Club_ID)
   end

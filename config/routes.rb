@@ -1,12 +1,15 @@
 Rails.application.routes.draw do
   root "financial_records#expenseDashboard"
-  resources :financial_records, only: [ :create, :edit, :update, :index, :show ] do
+  resources :financial_records, only: [ :create, :edit, :update, :index, :show, :destroy ] do
     collection do
       get "expenseForm", to: "financial_records#expenseForm", as: :expense_form
       get "expenseDashboard"
     end
     member do
       get "expense_details"
+    end
+    member do
+      get "delete_confirmation", to: "financial_records#delete_confirmation"
     end
   end
 

@@ -21,18 +21,11 @@ class AuthController < ApplicationController
   end
 
   def sign_in
-  # Debugging: Print email and password
-  puts "Attempting to sign in with email: #{user_params[:email]}"
-  puts "Password: #{user_params[:password]}"
-
   response = supabase_client.sign_in(user_params[:email], user_params[:password])
-
-  # Debugging: Print the full response for troubleshooting
-  puts "Response from Supabase: #{response}"
 
   if response.success?
     session[:token] = response.parsed_response["access_token"]
-    redirect_to root_path, notice: "Successfully signed in!"
+    redirect_to signed_in_path
   else
     flash.now[:error] = "Response from Supabase: #{response}"
     render :signin_new, status: :unauthorized

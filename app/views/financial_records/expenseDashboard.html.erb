@@ -1,8 +1,17 @@
 <%= button_to "Add Expense", expense_form_financial_records_path, method: :get %>
 
 <div>
-  <%= button_to "Super Club Expenses", "#", method: :get %>
+  <%= button_to "Super Club Expenses", super_club_expenses_financial_records_path, method: :get %>
   <%= button_to "Sub-Club Expenses", "#", method: :get %>
+</div>
+
+<!-- Sorting Links -->
+<div style="text-align: right; margin-bottom: 10px;">
+  <strong>Sort By:</strong>
+  <%= link_to 'Amount ▲', expenseDashboard_financial_records_path(sort: 'amount_asc') %>
+  <%= link_to '▼', expenseDashboard_financial_records_path(sort: 'amount_desc') %> |
+  <%= link_to 'Date ▲', expenseDashboard_financial_records_path(sort: 'date_asc') %>
+  <%= link_to '▼', expenseDashboard_financial_records_path(sort: 'date_desc') %>
 </div>
 
 <table>

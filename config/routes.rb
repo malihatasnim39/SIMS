@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     collection do
       get "expenseForm", to: "financial_records#expenseForm", as: :expense_form
       get "expenseDashboard"
+      get "super_club_expenses"
     end
     member do
       get "expense_details"

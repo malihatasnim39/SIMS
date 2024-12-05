@@ -1,0 +1,20 @@
+<!-- Total Expenses Section -->
+<div>
+  <h2>Total Expenses</h2>
+  <p><%= number_to_currency(@total_super_club_expenses, unit: "RM") %></p>
+</div>
+
+<% if @super_club_expenses.any? %>
+  <!-- Super Club Cards Section -->
+  <div>
+    <% @super_club_expenses.each do |club_name, total_expenses| %>
+      <div>
+        <h3><%= Club_Name %></h3>
+        <p><%= number_to_currency(expense.total_expenses, unit: "RM") %></p>
+        <!-- link_to 'View Details', super_club_expense_details_path(expense.Club_Name) -->
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No super club expenses to display.</p>
+<% end %>

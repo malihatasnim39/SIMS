@@ -25,6 +25,7 @@ class AuthController < ApplicationController
 
   if response.success?
     session[:token] = response.parsed_response["access_token"]
+    session[:user_type] = response.parsed_response["is_supervisor"]
     redirect_to signed_in_path
   else
     flash.now[:error] = "Response from Supabase: #{response}"

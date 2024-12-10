@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendors</title>
+  <%= stylesheet_link_tag 'application', media: 'all', data: { turbolinks: false } %>
+</head>
+<body>
+
+<header>
+  <%= image_tag 'back-icon.png', alt: 'Back', style: 'width: 20px; cursor: pointer;' %>
+  <div class="search-bar">
+    <input type="text" placeholder="Search">
+  </div>
+  <%= image_tag 'user-icon.png', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
+</header>
+
+<div class="container">
+  <div class="sort">
+    <span>Sorted by Availability</span>
+    <span>
+      <%= image_tag 'filter-icon.png', alt: 'Filter', style: 'width: 20px;' %>
+    </span>
+  </div>
+  <div class="cards">
+    <!-- Loop through equipment items -->
+    <% @vendors.each do |vendor| %>
+      <div class="card">
+        <div class="card-content">
+          <div class="card-title"><%= vendor.Name %></div>
+        </div>
+        <%= link_to ">", vendor, class: "more-link" %>
+      </div>
+    <% end %>
+    <!-- "+" card to open the modal -->
+    <div class="card add-card">
+      <%= link_to "+", new_vendor_path, class: "add-link" %>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="btn">
+    <%= link_to "Equipment", equipments_path, class: "move-link" %>
+  </div>
+  <div class="btn">
+    <%= link_to "Borrow", vendors_path, class: "move-link" %>
+  </div>
+  <div class="btn active">
+    <%= link_to "Vendor", vendors_path, class: "move-link active" %>
+  </div>
+</div>
+
+</body>
+</html>

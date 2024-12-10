@@ -1,0 +1,10 @@
+<h1><%= @vendor.Name %></h1>
+
+<ul>
+  <li><%= link_to "Edit", edit_vendor_path(@vendor) %></li>
+  <li><%= link_to "Delete", vendor_path(@vendor), data: {
+    turbo_method: :delete,
+    turbo_confirm: "Are you sure?"
+  } %></li>
+  <li><%= link_to "Back", vendors_path %></li>
+</ul>

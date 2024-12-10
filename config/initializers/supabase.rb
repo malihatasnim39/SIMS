@@ -1,5 +1,3 @@
-require "httparty"
-
 module Supabase
   class Client
     include HTTParty
@@ -40,6 +38,14 @@ module Supabase
         body: body.to_json,
         headers: @options[:headers]
       )
+    end
+
+    def get_user_info(token)
+      endpoint = "/auth/v1/user"
+      headers = @options[:headers].merge("Authorization" => "Bearer #{token}")
+
+      response = self.class.get(endpoint, headers: headers)
+      response.parsed_response
     end
 
     def verify_jwt(token)

@@ -21,17 +21,18 @@ class AuthController < ApplicationController
   end
 
   def sign_in
-  response = supabase_client.sign_in(user_params[:email], user_params[:password])
+    response = supabase_client.sign_in(user_params[:email], user_params[:password])
 
-  if response.success?
-    session[:token] = response.parsed_response["access_token"]
-    session[:user_type] = response.parsed_response["is_supervisor"]
-    redirect_to signed_in_path
-  else
-    flash.now[:error] = "Response from Supabase: #{response}"
-    render :signin_new, status: :unauthorized
+    if response.success?
+      session[:token] = response.parsed_response["access_token"]
+      user_info = supabase_client.get_user_info(response.parsed_response["access_token"])
+      session[:user_type] = user_info["is_supervisor"]
+      redirect_to signed_in_path
+    else
+      flash.now[:error] = "Response from Supabase: #{response}"
+      render :signin_new, status: :unauthorized
+    end
   end
-end
 
   def sign_out
     session.delete(:token)

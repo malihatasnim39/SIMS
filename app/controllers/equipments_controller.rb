@@ -2,6 +2,12 @@ class EquipmentsController < ApplicationController
   def index
     @equipments = Equipment.all
     @equipment = Equipment
+    @unique_equipments = Equipment.select(:Equipment_Name).distinct
+  end
+
+  def group_items
+    @equipment_name = params[:equipment_name]
+    @items = Equipment.where(Equipment_Name: @equipment_name)
   end
 
   def show

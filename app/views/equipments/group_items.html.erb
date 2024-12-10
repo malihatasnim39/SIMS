@@ -25,13 +25,12 @@
   </div>
   <div class="cards">
     <!-- Loop through equipment items -->
-    <% @unique_equipments.each do |equipment| %>
+    <% @items.each do |item| %>
       <div class="card">
         <div class="card-content">
-          <div class="card-title"><%= equipment.Equipment_Name %></div>
-          <div class="quantity">Quantity: <%= @equipment.where(Equipment_Name: equipment.Equipment_Name ).size %></div>
+          <div class="card-title"><%= item.Equipment_Name %></div>
         </div>
-        <%= link_to ">", group_items_path(equipment.Equipment_Name), class: "more-link" %>
+        <%= link_to ">", item, class: "more-link" %>
       </div>
     <% end %>
     <!-- "+" card to open the modal -->

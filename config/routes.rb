@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   root "equipments#index"
 
+  get "equipments/group/:equipment_name", to: "equipments#group_items", as: :group_items
+
   resources :equipments
+  resources :vendors
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

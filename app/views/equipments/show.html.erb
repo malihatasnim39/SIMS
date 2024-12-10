@@ -2,7 +2,7 @@
 
 <ul>
   <li><%= link_to "Edit", edit_equipment_path(@equipment) %></li>
-  <li><%= link_to "Destroy", equipment_path(@equipment), data: {
+  <li><%= link_to "Delete", equipment_path(@equipment), data: {
     turbo_method: :delete,
     turbo_confirm: "Are you sure?"
   } %></li>

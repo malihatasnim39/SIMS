@@ -15,7 +15,7 @@ class ClubsController < ApplicationController
   end
 
   def index
-    @clubs = Club.all
+    @clubs = Club.where(Is_Super_Club: true)
   end
 
   def edit
@@ -38,6 +38,11 @@ class ClubsController < ApplicationController
     @club.children.update_all(Parent_Club: nil) # Nullify the parent club reference
     @club.destroy
     redirect_to clubs_path, notice: "Club deleted successfully."
+  end
+
+  def show_children
+    @parent_club = Club.find(params[:id])
+    @child_clubs = @parent_club.children
   end
 
   private

@@ -1,4 +1,4 @@
-<h1>All Super Clubs</h1>
+<h1>Child Clubs of <%= @parent_club.Club_Name %></h1>
 <table>
     <thead>
         <tr>
@@ -11,8 +11,8 @@
         </tr>
     </thead>
     <tbody>
-        <% @clubs.each do |club| %>
-        <tr onclick="window.location='<%= show_children_club_path(club) %>'" style="cursor: pointer;">
+        <% @child_clubs.each do |club| %>
+        <tr>
             <td><%= club.Club_ID %></td>
             <td><%= club.Club_Name %></td>
             <td><%= club.Is_Super_Club %></td>

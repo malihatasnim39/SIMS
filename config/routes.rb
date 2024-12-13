@@ -9,5 +9,9 @@ Rails.application.routes.draw do
   get "/signed_in", to: "auth#signed_in"
   get "club_created", to: "clubs#club_created"
 
-  resources :clubs, only: [ :new, :create, :index, :edit, :update, :destroy ]
+  resources :clubs do
+    member do
+      get :show_children
+    end
+  end
 end

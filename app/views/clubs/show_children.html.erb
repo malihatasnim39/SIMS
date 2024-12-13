@@ -1,18 +1,24 @@
-<h1>Child Clubs of <%= @parent_club.Club_Name %></h1>
+<h1><%= @parent_club.Club_Name %></h1>
+<div> <%= button_to "Edit Club", edit_club_path(@parent_club), method: :get, class: "btn btn-primary" %></div>
+
 <table>
     <thead>
         <tr>
             <th>Club ID</th>
             <th>Club Name</th>
             <th>Budget</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <% @child_clubs.each do |club| %>
-        <tr onclick="window.location='<%= edit_club_path(club) %>'" style="cursor: pointer;">
+        <tr>
             <td><%= club.Club_ID %></td>
             <td><%= club.Club_Name %></td>
             <td><%= club.Budget %></td>
+            <td>
+                <%= button_to "Edit Club", edit_club_path(club), method: :get, class: "btn btn-primary" %>
+            </td>
         </tr>
         <% end %>
     </tbody>

@@ -4,10 +4,7 @@
         <tr>
             <th>Club ID</th>
             <th>Club Name</th>
-            <th>Is Super Club</th>
-            <th>Parent Club</th>
             <th>Budget</th>
-            <th>Created At</th>
         </tr>
     </thead>
     <tbody>
@@ -15,10 +12,7 @@
         <tr onclick="window.location='<%= show_children_club_path(club) %>'" style="cursor: pointer;">
             <td><%= club.Club_ID %></td>
             <td><%= club.Club_Name %></td>
-            <td><%= club.Is_Super_Club %></td>
-            <td><%= club.parent_club&.Club_Name %></td>
             <td><%= club.Budget %></td>
-            <td><%= club.Created_At %></td>
         </tr>
         <% end %>
     </tbody>

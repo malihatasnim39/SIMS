@@ -9,9 +9,9 @@
   <div>
     <% @super_club_expenses.each do |club_name, total_expenses| %>
       <div>
-        <h3><%= Club_Name %></h3>
-        <p><%= number_to_currency(expense.total_expenses, unit: "RM") %></p>
-        <!-- link_to 'View Details', super_club_expense_details_path(expense.Club_Name) -->
+        <h3><%= club_name %></h3> <!-- club_name comes from the @super_club_expenses hash -->
+        <p><%= number_to_currency(total_expenses, unit: "RM") %></p>
+        <%= link_to "View All Expenses", all_super_expenses_club_path(Club.find_by(Club_Name: club_name)), class: "btn btn-primary" %>
       </div>
     <% end %>
   </div>

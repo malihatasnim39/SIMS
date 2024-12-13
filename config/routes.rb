@@ -19,6 +19,13 @@ Rails.application.routes.draw do
     get "club_info", on: :member
   end
 
+  resources :clubs do
+    member do
+      get :all_super_expenses
+    end
+  end
+
+
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

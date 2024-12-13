@@ -50,26 +50,41 @@ class FinancialRecordsController < ApplicationController
       redirect_back(fallback_location: expense_details_financial_record_path(@financial_record))
     end
   end
-  def super_club_expenses
-    # Fetch financial records for super clubs
-    @super_club_expenses = FinancialRecord.joins(:club)
-                                          .where(clubs: { Is_Super_Club: true })
-                                          .group("clubs.Club_Name")
-                                          .select('clubs."Club_Name", SUM("Amount") AS total_expenses')
-     @total_super_club_expenses = @super_club_expenses.sum(&:total_expenses)
-  end
+
+
 
   def super_club_expenses
+    # Fetch all super clubs
     @super_clubs = Club.where(Is_Super_Club: true)
     @super_club_expenses = {}
 
-    @super_clubs.each do |club|
-      club_expenses = FinancialRecord.where(club_id: financial_record.Club_ID).sum(:Amount)
-      @super_club_expenses[club.club_name] = club_expenses
+    # Calculate total expenses for each super club
+    @super_clubs.each do |super_club|
+      # Fetch all sub-club IDs belonging to this super club
+      sub_club_ids = Club.where(Parent_Club: super_club.Club_ID).pluck(:Club_ID)
+
+      # Sum expenses for these sub-clubs
+      club_expenses = FinancialRecord.where(Club_ID: sub_club_ids).sum(:Amount)
+
+      # Store the total expenses in a hash with the super club's name
+      @super_club_expenses[super_club.Club_Name] = club_expenses
     end
 
+    # Calculate the total expenses for all super clubs combined
     @total_super_club_expenses = @super_club_expenses.values.sum
   end
+
+  def all_super_expenses
+    @club = Club.find(params[:id]) # Find the super club by ID
+    @expenses = FinancialRecord.where(Club_ID: params[:id]) # Fetch all expenses for this super club
+
+    respond_to do |format|
+      format.html # Render HTML (default)
+      format.js   # Support rendering via JavaScript (optional for dynamic updates)
+    end
+  end
+
+
 
   def delete_confirmation
     @financial_record = FinancialRecord.find(params[:id])

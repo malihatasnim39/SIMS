@@ -1,10 +1,12 @@
 <h1><%= @parent_club.Club_Name %></h1>
-<div> <%= button_to "Edit Club", edit_club_path(@parent_club), method: :get, class: "btn btn-primary" %></div>
+<div>
+    <%= button_to "Edit Club", edit_club_path(@parent_club), method: :get, class: "btn btn-primary" %>
+    <%= button_to "Create new sub club", new_sub_club_clubs_path(parent_club_id: @parent_club.id), method: :get, class: "btn btn-secondary" %>
+</div>
 
 <table>
     <thead>
         <tr>
-            <th>Club ID</th>
             <th>Club Name</th>
             <th>Budget</th>
             <th></th>
@@ -13,7 +15,6 @@
     <tbody>
         <% @child_clubs.each do |club| %>
         <tr>
-            <td><%= club.Club_ID %></td>
             <td><%= club.Club_Name %></td>
             <td><%= club.Budget %></td>
             <td>

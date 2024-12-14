@@ -1,9 +1,13 @@
 <h1>All Super Clubs</h1>
-</h1>
+
+<div>
+    <%= button_to "Add a Super Club", new_super_club_clubs_path, method: :get, class: "btn btn-primary" %>
+
+</div>
+
 <table>
     <thead>
         <tr>
-            <th>Club ID</th>
             <th>Club Name</th>
             <th>Budget</th>
         </tr>
@@ -11,7 +15,6 @@
     <tbody>
         <% @clubs.each do |club| %>
         <tr onclick="window.location='<%= show_children_club_path(club) %>'" style="cursor: pointer;">
-            <td><%= club.Club_ID %></td>
             <td><%= club.Club_Name %></td>
             <td><%= club.Budget %></td>
         </tr>

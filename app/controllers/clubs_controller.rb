@@ -1,21 +1,22 @@
 class ClubsController < ApplicationController
-  def new
-    @club = Club.new
-    @super_clubs = Club.where(Is_Super_Club: true)
-  end
-
-  def create
-    @club = Club.new(club_params)
-    if @club.save
-      redirect_to club_created_path
-    else
-      @super_clubs = Club.where(Is_Super_Club: true)
-      render :new, status: :unprocessable_entity
-    end
+  def new_super_club
+    @club = Club.new(Is_Super_Club: true)
+    render :new_super_club
   end
 
   def index
     @clubs = Club.where(Is_Super_Club: true)
+  end
+
+  def show_children
+    @parent_club = Club.find(params[:id])
+    @child_clubs = Club.where(Parent_Club: @parent_club.Club_ID)
+  end
+
+  def new_sub_club
+    @club = Club.new(Is_Super_Club: false, Parent_Club: params[:parent_club_id])
+    @super_clubs = Club.where(Is_Super_Club: true)
+    render :new_sub_club
   end
 
   def edit
@@ -33,21 +34,23 @@ class ClubsController < ApplicationController
     end
   end
 
-  def destroy
-    @club = Club.find(params[:id])
-    @club.children.update_all(Parent_Club: nil) # Nullify the parent club reference
-    @club.destroy
-    redirect_to clubs_path, notice: "Club deleted successfully."
-  end
-
-  def show_children
-    @parent_club = Club.find(params[:id])
-    @child_clubs = @parent_club.children
+  def create
+    @club = Club.new(club_params)
+    if @club.save
+      redirect_to club_created_path
+    else
+      if @club.Is_Super_Club
+        render :new_super_club, status: :unprocessable_entity
+      else
+        @super_clubs = Club.where(Is_Super_Club: true)
+        render :new_sub_club, status: :unprocessable_entity
+      end
+    end
   end
 
   private
 
   def club_params
-    params.require(:club).permit(:Is_Super_Club, :Club_Name, :Parent_Club, :Budget)
+    params.require(:club).permit(:Club_Name, :Parent_Club, :Budget).merge(Is_Super_Club: false)
   end
 end

@@ -13,5 +13,9 @@ Rails.application.routes.draw do
     member do
       get :show_children
     end
+    collection do
+      get :new_super_club
+      get :new_sub_club
+    end
   end
 end

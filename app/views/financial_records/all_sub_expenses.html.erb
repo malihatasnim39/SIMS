@@ -14,7 +14,7 @@
   <tbody>
     <% @expenses.each do |expense| %>
       <tr>
-        <td><%= expense.Title %></td>
+        <td><%= link_to expense.Title, expense_details_financial_record_path(expense) %></td>
         <td><%= expense.Quantity %></td>
         <td><%= expense.vendor&.Name || "N/A" %></td> <!-- Adjust Vendor column name -->
         <td><%= expense.club&.Club_Name || "N/A" %></td>  <!-- Display Sub-club Name -->

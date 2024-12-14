@@ -6,6 +6,7 @@ class ClubsController < ApplicationController
 
   def index
     @clubs = Club.where(Is_Super_Club: true)
+    @total_budget = @clubs.sum(:Budget)
   end
 
   def show_children
@@ -51,6 +52,6 @@ class ClubsController < ApplicationController
   private
 
   def club_params
-    params.require(:club).permit(:Club_Name, :Parent_Club, :Budget).merge(Is_Super_Club: false)
+    params.require(:club).permit(:Is_Super_Club, :Club_Name, :Parent_Club, :Budget)
   end
 end

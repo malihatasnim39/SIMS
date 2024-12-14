@@ -9,11 +9,11 @@
   <div>
     <% @super_club_expenses.each do |club_name, total_expenses| %>
       <div>
-        <h3><%= club_name %></h3> <!-- club_name comes from the @super_club_expenses hash -->
-        <p><%= number_to_currency(total_expenses, unit: "RM") %></p>
-        <%= link_to "View All Expenses", all_super_expenses_club_path(Club.find_by(Club_Name: club_name)), class: "btn btn-primary" %>
+      <h3><%= club_name %></h3>
+      <p><%= number_to_currency(total_expenses, unit: "RM") %></p>
+      <%= link_to "View Expenses", all_super_expenses_financial_record_path(Club.find_by(Club_Name: club_name)), class: "btn btn-primary" %>
       </div>
-    <% end %>
+   <% end %>
   </div>
 <% else %>
   <p>No super club expenses to display.</p>

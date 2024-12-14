@@ -75,15 +75,35 @@ class FinancialRecordsController < ApplicationController
   end
 
   def all_super_expenses
-    @club = Club.find(params[:id]) # Find the super club by ID
-    @expenses = FinancialRecord.where(Club_ID: params[:id]) # Fetch all expenses for this super club
-
-    respond_to do |format|
-      format.html # Render HTML (default)
-      format.js   # Support rendering via JavaScript (optional for dynamic updates)
-    end
+    @club = Club.find(params[:id]) # Find the super club using the passed ID
+    sub_club_ids = Club.where(Parent_Club: @club.Club_ID).pluck(:Club_ID) # Fetch IDs of sub-clubs
+    # Fetch financial records tied to those sub-clubs
+    @expenses = FinancialRecord.where(Club_ID: sub_club_ids)
   end
 
+  def sub_club_expenses
+    # Fetch all sub-clubs (those with Parent_Club not null and Is_Super_Club is false)
+    @sub_clubs = Club.where(Is_Super_Club: false).where.not(Parent_Club: nil)
+    @sub_club_expenses = {}
+
+    # Calculate total expenses for each sub-club
+    @sub_clubs.each do |sub_club|
+      # Sum expenses for the sub-club
+      club_expenses = FinancialRecord.where(Club_ID: sub_club.Club_ID).sum(:Amount)
+
+      # Store the total expenses in a hash with the sub-club's name
+      @sub_club_expenses[sub_club.Club_Name] = club_expenses
+    end
+
+    # Calculate the total expenses for all sub-clubs combined
+    @total_sub_club_expenses = @sub_club_expenses.values.sum
+  end
+
+  def all_sub_expenses
+    @club = Club.find(params[:id])  # Find the sub-club using the passed ID
+    @expenses = FinancialRecord.joins(:club, :vendor)  # Ensure we join with both club and vendor
+                               .where('"financial_records"."Club_ID" = ?', @club.Club_ID)  # Match the Club_ID
+  end
 
 
   def delete_confirmation

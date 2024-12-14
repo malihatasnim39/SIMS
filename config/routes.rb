@@ -6,11 +6,20 @@ Rails.application.routes.draw do
       get "expenseDashboard"
       get "super_club_expenses"
     end
+    collection do
+      get "sub_club_expenses"
+    end
+    member do
+      get "all_sub_expenses"
+    end
     member do
       get "expense_details"
     end
     member do
       get "delete_confirmation", to: "financial_records#delete_confirmation"
+    end
+    member do
+      get :all_super_expenses
     end
   end
 
@@ -18,15 +27,6 @@ Rails.application.routes.draw do
   resources :equipments do
     get "club_info", on: :member
   end
-
-  resources :clubs do
-    member do
-      get :all_super_expenses
-    end
-  end
-
-
-
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

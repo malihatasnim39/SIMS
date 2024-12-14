@@ -1,0 +1,26 @@
+<h2>All Expenses for <%= @club.Club_Name %></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name of Expense</th>
+      <th>Quantity</th>
+      <th>Vendor</th>
+      <th>Sub-club</th>
+      <th>Amount</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @expenses.each do |expense| %>
+      <tr>
+        <td><%= expense.Title %></td>
+        <td><%= expense.Quantity %></td>
+        <td><%= expense.vendor&.Name || "N/A" %></td> <!-- Adjust Vendor column name -->
+        <td><%= expense.club&.Club_Name || "N/A" %></td>  <!-- Display Sub-club Name -->
+        <td><%= number_to_currency(expense.Amount, unit: "RM") %></td>
+        <td><%= expense.Created_At.strftime("%d/%m/%Y") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

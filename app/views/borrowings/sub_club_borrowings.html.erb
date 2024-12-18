@@ -1,0 +1,25 @@
+<div class="frame">
+  <header class="header">
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search">
+    </div>
+    <div class="user-icon">👤</div>
+  </header>
+
+  <h2 class="page-title">Sub Club Borrowing Records</h2>
+
+  <div class="borrowed-list">
+    <% @sub_club_borrowings.each do |item| %>
+      <div class="card">
+        <div class="card-content">
+          <p class="item-name"><strong><%= item.equipment&.Equipment_Name %></strong></p>
+          <p class="borrower-name">Borrowed by: <%= item.club&.Club_Name %></p>
+          <p class="borrow-period">
+            <%= item.borrow_date.strftime('%d/%m/%Y') %> - <%= item.due_date.strftime('%d/%m/%Y') %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

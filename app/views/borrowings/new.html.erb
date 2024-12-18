@@ -1,0 +1,37 @@
+<h1>Add Borrowing Record</h1>
+
+<%= form_with model: @borrowing, local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :equipment_id, 'Name of Item' %>
+    <%= f.text_field :equipment_id, class: 'form-control', placeholder: 'Name of Item', required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :pic_id, 'Select Borrower' %>
+    <%= f.select :pic_id, options_for_select(@borrowers&.map { |b| [b.name, b.id] } || []), { prompt: 'Select Borrower' }, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :club_id, 'Club' %>
+    <%= f.select :club_id, options_for_select(@clubs&.map { |c| [c.Club_Name, c.Club_ID] } || []), { prompt: 'Select Club' }, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :predefined_duration, 'Select Duration' %>
+    <%= f.select :predefined_duration, options_for_select(['Last Week', 'Last Month', 'Last Year', 'All Time']), { prompt: 'Select Duration' }, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :borrow_date, 'Borrow Date' %>
+    <%= f.date_field :borrow_date, class: 'form-control', required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :due_date, 'Due Date' %>
+    <%= f.date_field :due_date, class: 'form-control', placeholder: 'Select Due Date' %>
+  </div>
+
+  <%= f.submit 'Add Borrowing', class: 'btn btn-success' %>
+<% end %>
+
+<%= link_to 'Back', borrowings_path, class: 'btn btn-secondary' %>

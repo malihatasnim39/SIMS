@@ -1,0 +1,33 @@
+<h1>Update Borrowing</h1>
+
+<%= form_with model: @borrowing, local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :equipment_id, "Name of Item" %>
+    <%= f.text_field :equipment_id, class: "form-control", value: @borrowing.equipment_id, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :pic_id, "Borrower" %>
+    <%= f.text_field :pic_id, class: "form-control", value: @borrowing.pic_id %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :borrow_date, "Borrow Date" %>
+    <%= f.date_field :borrow_date, class: "form-control", value: @borrowing.borrow_date %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :due_date, "Due Date" %>
+    <%= f.date_field :due_date, class: "form-control", value: @borrowing.due_date %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update Borrowing", class: "btn btn-success" %>
+  </div>
+<% end %>
+
+<div class="actions">
+  <%= button_to "Delete Borrowing", borrowing_path(@borrowing), method: :delete, data: { confirm: "Are you sure you want to delete this borrowing record?" }, class: "btn btn-danger" %>
+</div>
+
+<%= link_to "Back to Borrowings", borrowings_path, class: "btn btn-secondary" %>

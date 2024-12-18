@@ -1,7 +1,11 @@
 class VendorsController < ApplicationController
   def index
-    @vendors = Vendor.all
-    @vendor = Vendor
+    if params[:query].present?
+      query = params[:query].downcase
+      @vendors = Vendor.where('LOWER("Name") LIKE ?', "%#{query}%")
+    else
+      @vendors = Vendor.all
+    end
   end
 
   def show

@@ -2,12 +2,26 @@ class EquipmentsController < ApplicationController
   def index
     @equipments = Equipment.all
     @equipment = Equipment
-    @unique_equipments = Equipment.select(:Equipment_Name).distinct
+
+    if params[:query].present?
+      query = params[:query].downcase
+      @unique_equipments = Equipment.where('LOWER("Equipment_Name") LIKE ?', "%#{query}%").distinct
+    else
+      @unique_equipments = Equipment.select(:Equipment_Name).distinct
+    end
   end
 
   def group_items
     @equipment_name = params[:equipment_name]
-    @items = Equipment.where(Equipment_Name: @equipment_name)
+
+    if params[:query].present?
+      # Perform case-insensitive search for Equipment_Name using ILIKE (PostgreSQL)
+      @items = Equipment.where(Equipment_Name: @equipment_name).where('LOWER("Equipment_Name") LIKE ? OR "Equipment_ID" = ?',
+                                                                      "%#{params[:query].downcase}%",
+                                                                      params[:query].to_i)
+    else
+      @items = Equipment.where(Equipment_Name: @equipment_name)
+    end
   end
 
   def show

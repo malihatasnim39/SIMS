@@ -1,56 +1,76 @@
 class BorrowingsController < ApplicationController
+  before_action :set_borrowing, only: [ :edit, :update, :destroy ]
+
+  # Index
   def index
-    @borrowings = Borrowing.includes(:equipment).all
-
-    Rails.logger.debug "Borrowings: #{@borrowings.map { |b| { id: b.id, due_date: b.due_date } }}"
-
-    @overdue_items = @borrowings.select do |b|
-      overdue = b.due_date.present? && b.due_date.to_date < Date.today
-      Rails.logger.debug "Borrowing #{b.id} is overdue: #{overdue}"
-      overdue
-    end
+    @borrowings = Borrowing.includes(:equipment, :club)
+    @overdue = Borrowing.includes(:equipment, :club).where("due_date < ? AND status = ?", Date.today, "borrowed")
+    @borrowed = Borrowing.includes(:equipment, :club).where(status: "borrowed")
   end
 
+  # Super Club Borrowings
+  def super_club_borrowings
+    @super_club_borrowings = Borrowing.joins(:club).includes(:equipment, :club)
+                                      .where(clubs: { Is_Super_Club: true })
+  end
 
+  # Sub Club Borrowings
+  def sub_club_borrowings
+    @sub_club_borrowings = Borrowing.joins(:club).includes(:equipment, :club)
+                                    .where(clubs: { Is_Super_Club: false })
+  end
+
+  # New Record
   def new
     @borrowing = Borrowing.new
+    @equipments = Equipment.all
     @clubs = Club.all
   end
 
+  # Create Record
   def create
     @borrowing = Borrowing.new(borrowing_params)
+    @borrowing.status ||= "borrowed"
+
     if @borrowing.save
       redirect_to borrowings_path, notice: "Borrowing record created successfully."
     else
+      @equipments = Equipment.all
+      @clubs = Club.all
       render :new
     end
   end
 
+  # Edit
   def edit
-    @borrowing = Borrowing.find(params[:id])
+    @equipments = Equipment.all
+    @clubs = Club.all
   end
 
+  # Update
   def update
-    @borrowing = Borrowing.find(params[:id])
     if @borrowing.update(borrowing_params)
       redirect_to borrowings_path, notice: "Borrowing record updated successfully."
     else
+      @equipments = Equipment.all
+      @clubs = Club.all
       render :edit
     end
   end
 
+  # Destroy
   def destroy
-    @borrowing = Borrowing.find(params[:id])
-    if @borrowing.destroy
-      redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
-    else
-      redirect_to borrowings_path, alert: "Failed to delete borrowing record."
-    end
+    @borrowing.destroy
+    redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
   end
 
   private
 
+  def set_borrowing
+    @borrowing = Borrowing.find(params[:id])
+  end
+
   def borrowing_params
-    params.require(:borrowing).permit(:equipment_id, :pic_id, :borrow_date, :due_date, :predefined_duration, :status)
+    params.require(:borrowing).permit(:equipment_id, :club_id, :borrow_date, :due_date, :status)
   end
 end

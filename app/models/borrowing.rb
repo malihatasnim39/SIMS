@@ -1,27 +1,14 @@
 class Borrowing < ApplicationRecord
-  belongs_to :equipment, optional: true
-  belongs_to :club, optional: true
+  belongs_to :equipment, foreign_key: "equipment_id", class_name: "Equipment"
+  belongs_to :club, foreign_key: "club_id", class_name: "Club"
 
-  before_save :set_due_date
-
-  delegate :name, to: :equipment, prefix: true, allow_nil: true
+  validates :equipment_id, :club_id, :borrow_date, :due_date, presence: true
+  validates :status, inclusion: { in: %w[borrowed returned overdue] }
+  before_save :ensure_due_date_is_date
 
   private
 
-  def set_due_date
-    if predefined_duration.present?
-      case predefined_duration
-      when "Last Week"
-        self.due_date = borrow_date + 7.days
-      when "Last Month"
-        self.due_date = borrow_date + 1.month
-      when "Last Year"
-        self.due_date = borrow_date + 1.year
-      else
-        self.due_date = borrow_date
-      end
-    else
-      self.due_date = end_date
-    end
+  def ensure_due_date_is_date
+    self.due_date = due_date.to_date if due_date.present?
   end
 end

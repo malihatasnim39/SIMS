@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   resources :borrowings
   get "up" => "rails/health#show", as: :rails_health_check
+  get "equipments/group/:equipment_name", to: "equipments#group_items", as: :group_items
 
+  resources :equipments
+  resources :vendors
   get "/signin", to: "auth#signin_new"
   post "/signin", to: "auth#sign_in"
   delete "/signout", to: "auth#sign_out"

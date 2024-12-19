@@ -1,0 +1,23 @@
+<%= form_with model: equipment, url: equipments_path do |form| %>
+  <div>
+    <%= form.text_field :Equipment_Name, placeholder: "Equipment Name" %>
+  </div>
+
+  <div>
+    <%= form.text_field :Financial_Record_Id, placeholder: "Financial Record" %>
+  </div>
+
+  <div>
+    <%= form.select :Club_ID, options_for_select(Club.all.collect { |c| [c.Club_Name, c.Club_ID] }), prompt: "Club" %>
+  </div>
+
+  <div>
+    <%= form.select :Vendor_ID, options_for_select(Vendor.all.collect { |v| [v.Name, v.Vendor_ID] }), prompt: "Vendor (Optional)" %>
+  </div>
+
+  <div class>
+    <%= form.submit "Add Equipment", class: "button" %>
+  </div>
+<% end %>
+
+<button onclick="history.back()">Cancel</button>

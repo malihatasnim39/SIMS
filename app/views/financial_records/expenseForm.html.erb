@@ -1,0 +1,28 @@
+<%= form_with model: @financial_record, local: true, class: "form-container" do |form| %>
+  <h1>Add Expense</h1>
+  
+  <div>
+    <%= form.text_field :Title, placeholder: "Name of Expense", required: true %>
+  </div>
+
+  <div>
+    <%= form.number_field :Amount, step: "0.01", placeholder: "Amount", required: true %>
+    <%= form.collection_select :Vendor_ID, Vendor.all, :id, :Name, { prompt: "Vendor" } %>
+  </div>
+
+  <div>
+    <%= form.collection_select :Equipment_ID, 
+                             Equipment.all, 
+                             :id, 
+                             :Equipment_Name, 
+                             { prompt: "Equipment" }, 
+                             { id: "financial_record_equipment_id" } %>
+    <%= form.collection_select :Club_ID, Club.where(Is_Super_Club: false), :id, :Club_Name, { prompt: "Sub-Club" }%>
+  </div>
+
+  <div>
+    <%= form.number_field :Quantity, step: 1, placeholder: "Quantity", required: true %>
+  </div>
+
+  <%= form.submit "Add Expense" %>
+<% end %>

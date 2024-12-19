@@ -1,6 +1,4 @@
 <div class="container">
-    <div class="centered">
-        <h1>Signed In Successfully</h1>
-        <p>User Type: <%= session[:user_type]%></p>
-    </div>
+    <h1>Signed In Successfully</h1>
+    <p>User Type: <%= session[:user_type] ? "Supervisor" : "PIC" %></p>
 </div>

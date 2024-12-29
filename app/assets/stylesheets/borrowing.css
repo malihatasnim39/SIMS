@@ -183,6 +183,40 @@ body {
   color: black;
 }
 
+/* Borrowing Table Styling */
+.borrowing-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #062c30; /* Dark background for the table */
+  color: #e4e4e4; /* Text color */
+}
+
+.borrowing-table th,
+.borrowing-table td {
+  border: 1px solid #4cd137; /* Green borders */
+  text-align: left; /* Left-align content */
+  padding: 12px; /* Padding for better readability */
+}
+
+.borrowing-table th {
+  background-color: #074848; /* Slightly darker background for headers */
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.borrowing-table td {
+  font-size: 13px;
+}
+
+.borrowing-table tr:nth-child(even) {
+  background-color: #083d3d; /* Alternate row colors */
+}
+
+.borrowing-table tr:hover {
+  background-color: #0b5757; /* Highlight on hover */
+}
+
 /* New and Edit Pages Styling */
 form {
   display: flex;

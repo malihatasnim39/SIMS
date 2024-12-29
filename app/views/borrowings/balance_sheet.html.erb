@@ -1,0 +1,40 @@
+<div class="frame">
+  <header class="header">
+    <button class="back-btn" onclick="history.back()">←</button>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" />
+    </div>
+    <div class="user-icon">👤</div>
+  </header>
+
+  <h2>All Borrowings</h2>
+
+  <table class="borrowing-table">
+    <thead>
+      <tr>
+        <th>Equipment</th>
+        <th>Quantity</th>
+        <th>Borrower</th>
+        <th>Date Borrowed</th>
+        <th>Date Returned</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @borrowings.present? %>
+        <% @borrowings.each do |borrowing| %>
+          <tr>
+            <td><%= borrowing.equipment&.Equipment_Name || 'N/A' %></td>
+            <td><%= borrowing.equipment&.financial_record&.Quantity || 'N/A' %></td>
+            <td><%= borrowing.club&.Club_Name || 'N/A' %></td>
+            <td><%= borrowing.borrow_date.strftime('%d/%m/%Y') %></td>
+            <td><%= borrowing.due_date ? borrowing.due_date.strftime('%d/%m/%Y') : 'Not Returned' %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="5">No borrowings found.</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

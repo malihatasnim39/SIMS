@@ -12,18 +12,24 @@ class FinancialRecordsController < ApplicationController
     else '"Created_At" DESC' # Default sorting
     end
 
-    @financial_records = FinancialRecord.includes(:equipment, :club).order(Arel.sql(sort_column))
+    @financial_records = FinancialRecord.includes(:club).order(Arel.sql(sort_column))
   end
 
   def expense_details
-    @financial_record = FinancialRecord.includes(:club, :equipment, :vendor).find(params[:id])
+    @financial_record = FinancialRecord.includes(:club, :vendor).find(params[:id])
+
+    respond_to do |format|
+      format.html # Default behavior for HTML requests
+      format.js { render partial: "financial_records/expense_details", locals: { financial_record: @financial_record } }
+    end
   end
+
 
   def create
     @financial_record = FinancialRecord.new(financial_record_params)
 
     if @financial_record.save
-      redirect_to root_path
+      redirect_to expenseDashboard_financial_records_path
     else
       render :expenseForm
     end
@@ -50,8 +56,6 @@ class FinancialRecordsController < ApplicationController
       redirect_back(fallback_location: expense_details_financial_record_path(@financial_record))
     end
   end
-
-
 
   def super_club_expenses
     # Fetch all super clubs
@@ -105,12 +109,11 @@ class FinancialRecordsController < ApplicationController
                                .where('"financial_records"."Club_ID" = ?', @club.Club_ID)  # Match the Club_ID
   end
 
-
   def delete_confirmation
     @financial_record = FinancialRecord.find(params[:id])
   end
 
   def financial_record_params
-    params.require(:financial_record).permit(:Title, :Amount, :Vendor_ID, :Equipment_ID, :Quantity, :Club_ID)
+    params.require(:financial_record).permit(:Title, :Amount, :Vendor_ID, :Quantity, :Club_ID)
   end
 end

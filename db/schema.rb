@@ -90,7 +90,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_01_083350) do
     t.string "Title", null: false
     t.decimal "Amount", null: false
     t.bigint "Vendor_ID"
-    t.bigint "Equipment_ID"
     t.timestamptz "Created_At", default: -> { "now()" }, null: false
     t.datetime "Edited_At", precision: nil
     t.integer "Quantity", default: 1, null: false

@@ -1,0 +1,37 @@
+:root {
+  --Background: #072326;
+  --Highlight-Color: #ccf2c2;
+}
+
+body {
+  background-color: var(--Background);
+}
+
+.clubsContainer {
+  display: flex;
+  justify-content: start;
+  gap: 15px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.clubsContainer .club {
+  width: 340px;
+  border: 1px solid var(--Highlight-Color);
+  color: var(--Highlight-Color);
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  align-items: center;
+}
+
+.clubsContainer .club:hover {
+  background-color: rgb(0, 79, 88);
+}
+
+.clubsContainer .club:last-child {
+  background-color: var(--Highlight-Color);
+  color: var(--Background);
+  justify-content: center;
+}

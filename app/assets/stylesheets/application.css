@@ -1,0 +1,14 @@
+:root {
+  --Background: #072326;
+  --Highlight-Color: #ccf2c2;
+}
+
+html {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+body {
+  max-width: 1200px;
+}

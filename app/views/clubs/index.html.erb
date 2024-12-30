@@ -19,19 +19,20 @@
             <h2>Total Budget</h2>
         </div>
         <div class="budgetNumber">
-            <p>RM <%= @total_budget %></p>
+            <p>RM <%= number_to_currency(@total_budget, unit: "", delimiter: ",", precision: 2) %></p>
         </div>
     </div>
 
 
-    <di class="clubsContainerParent">
+    <div class="clubsContainerParent">
         <h1>Super Clubs</h1>
         <div class="clubsContainer">
             <% @clubs.each do |club| %>
             <div class="club" onclick="window.location='<%= show_children_club_path(club) %>'" style="cursor: pointer;">
                 <div class="clubDetails">
                     <h2><%= club.Club_Name %></h2>
-                    <td>RM <%= club.Budget %></td>
+                    <p>RM <%= number_to_currency(club.Budget, unit: "", delimiter: ",", precision: 2) %></p>
+
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="28" viewBox="0 0 16 28" fill="none">
                     <path d="M0 3.23375L2.69167 0.5L16 14L2.69167 27.5L0 24.7663L10.6083 14L0 3.23375Z" fill="#CCF2C2" />
@@ -44,7 +45,7 @@
                 </svg>
             </a>
         </div>
-        </div>
+    </div>
 
 
 </body>

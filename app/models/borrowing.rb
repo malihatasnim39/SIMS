@@ -4,6 +4,7 @@ class Borrowing < ApplicationRecord
 
   validates :equipment_id, :club_id, :borrow_date, :due_date, presence: true
   validates :status, inclusion: { in: %w[borrowed returned overdue] }
+
   before_save :ensure_due_date_is_date
 
   private

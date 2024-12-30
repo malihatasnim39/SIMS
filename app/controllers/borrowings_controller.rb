@@ -12,18 +12,18 @@ class BorrowingsController < ApplicationController
   # Super Club Borrowings action to show super clubs
   def super_club_borrowings
     @super_clubs = Club.where(Is_Super_Club: true)
+    @super_club_borrowings = Borrowing.includes(:equipment, :club).where(club_id: @super_clubs.pluck(:Club_ID))
   end
 
   # Sub Club Borrowings action to show sub-clubs
   def sub_club_borrowings
     @sub_clubs = Club.where(Is_Super_Club: false)
   end
-
   def balance_sheet
-    @borrowings = Borrowing.includes(equipment: :financial_record, club: []).where(club_id: params[:id])
+    @borrowings = Borrowing.includes(:equipment, :club).where(club_id: params[:id])
+    @club_name = params[:club_name]
   end
 
-  # New borrowing record form
   def new
     @borrowing = Borrowing.new
     @equipments = Equipment.all

@@ -2,12 +2,12 @@
   <header class="header">
     <button class="back-btn" onclick="history.back()">←</button>
     <div class="search-bar">
-      <input type="text" placeholder="Search" />
+      <input type="text" id="search" placeholder="Search" />
     </div>
     <div class="user-icon">👤</div>
   </header>
 
-  <h2>All Borrowings</h2>
+  <h2>All <%= @club.Club_Name %> Borrowings</h2> <!-- Dynamically updated title -->
 
   <table class="borrowing-table">
     <thead>
@@ -20,11 +20,10 @@
       </tr>
     </thead>
     <tbody>
-      <% if @borrowings.present? %>
+      <% if @borrowings.any? %>
         <% @borrowings.each do |borrowing| %>
           <tr>
             <td><%= borrowing.equipment&.Equipment_Name || 'N/A' %></td>
-            <td><%= borrowing.equipment&.financial_record&.Quantity || 'N/A' %></td>
             <td><%= borrowing.club&.Club_Name || 'N/A' %></td>
             <td><%= borrowing.borrow_date.strftime('%d/%m/%Y') %></td>
             <td><%= borrowing.due_date ? borrowing.due_date.strftime('%d/%m/%Y') : 'Not Returned' %></td>

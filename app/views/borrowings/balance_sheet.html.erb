@@ -7,31 +7,51 @@
     <div class="user-icon">👤</div>
   </header>
 
-  <h2>All <%= @club.Club_Name %> Borrowings</h2> <!-- Dynamically updated title -->
+  <h2>All <%= @club.Club_Name %> Borrowings</h2>
 
   <table class="borrowing-table">
     <thead>
       <tr>
+        <th>ID</th>
         <th>Equipment</th>
         <th>Quantity</th>
-        <th>Borrower</th>
+        <th>Borrower (PIC)</th>
         <th>Date Borrowed</th>
-        <th>Date Returned</th>
+        <th>Date Due</th>
       </tr>
     </thead>
     <tbody>
       <% if @borrowings.any? %>
         <% @borrowings.each do |borrowing| %>
           <tr>
+            <!-- Borrowing ID -->
+            <td><%= borrowing.id %></td>
+
+            <!-- Equipment Name -->
             <td><%= borrowing.equipment&.Equipment_Name || 'N/A' %></td>
-            <td><%= borrowing.club&.Club_Name || 'N/A' %></td>
+
+            <!-- Quantity -->
+            <td><%= borrowing.quantity %></td>
+
+            <!-- Borrower (PIC) -->
+            <td>
+              <% if borrowing.person_in_charge.present? %>
+                <%= borrowing.person_in_charge.id %> <!-- Or use any relevant attribute from `user_data` -->
+              <% else %>
+                N/A
+              <% end %>
+            </td>
+
+            <!-- Borrow Date -->
             <td><%= borrowing.borrow_date.strftime('%d/%m/%Y') %></td>
+
+            <!-- Due Date -->
             <td><%= borrowing.due_date ? borrowing.due_date.strftime('%d/%m/%Y') : 'Not Returned' %></td>
           </tr>
         <% end %>
       <% else %>
         <tr>
-          <td colspan="5">No borrowings found.</td>
+          <td colspan="7">No borrowings found.</td>
         </tr>
       <% end %>
     </tbody>

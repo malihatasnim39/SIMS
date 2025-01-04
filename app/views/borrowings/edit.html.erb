@@ -20,6 +20,11 @@
     </div>
 
     <div class="form-row">
+      <%= form.label :quantity, "Quantity", class: "form-label" %>
+      <%= form.text_field :quantity, class: "form-input", inputmode: "numeric", pattern: "[0-9]*" %>
+    </div>
+
+    <div class="form-row">
       <%= form.label :borrow_date, "Borrow Date", class: "form-label" %>
       <%= form.date_field :borrow_date, class: "form-input" %>
     </div>
@@ -30,10 +35,15 @@
     </div>
 
     <div class="form-actions">
-      <%= link_to "Delete Borrowing", borrowing_path(@borrowing), method: :delete, data: { confirm: "Are you sure you want to delete this borrowing record?" }, class: "btn-delete" %>
       <%= form.submit "Update Borrowing", class: "btn-submit" %>
     </div>
   <% end %>
+
+  <div class="form-actions">
+    <%= form_with url: borrowing_path(@borrowing), method: :delete, local: true do %>
+      <button type="submit" class="btn-delete" data-confirm="Are you sure you want to delete this borrowing record?">Delete Borrowing</button>
+    <% end %>
+  </div>
 </div>
 
 <footer class="footer-nav">

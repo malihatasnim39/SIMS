@@ -7,7 +7,6 @@
     <div class="user-icon">👤</div>
   </header>
 
-  <!-- Add Borrowing Record Form -->
   <h2 class="page-title">Add Borrowing Record</h2>
   <%= form_with(model: @borrowing, local: true, class: "add-borrowing-form") do |form| %>
     <div>
@@ -19,6 +18,11 @@
       <%= form.label :club_id, "Club" %>
       <%= form.collection_select :club_id, @clubs, :Club_ID, :Club_Name, { prompt: "Select Club" }, class: "form-input" %>
     </div>
+
+<div class="form-row">
+  <%= form.label :quantity, "Quantity", class: "form-label" %>
+  <%= form.text_field :quantity, class: "form-input", inputmode: "numeric", pattern: "[0-9]*" %>
+</div>
 
     <div class="form-row">
       <%= form.label :borrow_date, "Borrow Date" %>

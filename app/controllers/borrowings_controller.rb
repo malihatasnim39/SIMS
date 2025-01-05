@@ -15,11 +15,11 @@ class BorrowingsController < ApplicationController
 
   def sub_club_borrowings
     @sub_clubs = Club.where(Is_Super_Club: false)
+    @sub_club_borrowings = Borrowing.includes(:equipment, :club).where(club_id: @sub_clubs.pluck(:Club_ID))
   end
 
   def balance_sheet
-    @borrowings = Borrowing.includes(:equipment, :club, :person_in_charge).where(club_id: params[:id])
-    @club = Club.find(params[:id])
+    @borrowings = Borrowing.includes(:equipment, :club).where(club_id: @club.id)
   end
 
   def new
@@ -30,13 +30,12 @@ class BorrowingsController < ApplicationController
 
   def create
     @borrowing = Borrowing.new(borrowing_params)
-    @borrowing.status ||= "borrowed"
-
     if @borrowing.save
       redirect_to borrowings_path, notice: "Borrowing record created successfully."
     else
       @equipments = Equipment.all
       @clubs = Club.all
+      flash[:alert] = @borrowing.errors.full_messages.to_sentence
       render :new
     end
   end
@@ -47,23 +46,26 @@ class BorrowingsController < ApplicationController
   end
 
   def update
+    old_quantity = @borrowing.quantity
+    old_equipment = @borrowing.equipment
+
     if @borrowing.update(borrowing_params)
+      if old_equipment != @borrowing.equipment || old_quantity != @borrowing.quantity
+        old_equipment.update!(stock: old_equipment.stock + old_quantity)
+        @borrowing.reduce_stock_on_borrow
+      end
       redirect_to borrowings_path, notice: "Borrowing record updated successfully."
     else
       @equipments = Equipment.all
       @clubs = Club.all
+      flash[:alert] = @borrowing.errors.full_messages.to_sentence
       render :edit
     end
   end
 
   def destroy
-    Rails.logger.debug "Destroy action invoked for Borrowing ID: #{params[:id]}"
     @borrowing.destroy
-    Rails.logger.debug "Borrowing record deleted successfully."
     redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
-  rescue ActiveRecord::RecordNotFound
-    Rails.logger.debug "Borrowing record not found for ID: #{params[:id]}"
-    redirect_to borrowings_path, alert: "Borrowing record not found."
   end
 
   private
@@ -74,9 +76,11 @@ class BorrowingsController < ApplicationController
 
   def set_club
     @club = Club.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to borrowings_path, alert: "Club not found."
   end
 
   def borrowing_params
-    params.require(:borrowing).permit(:equipment_id, :club_id, :borrow_date, :due_date, :status, :quantity)
+    params.require(:borrowing).permit(:equipment_id, :club_id, :borrow_date, :due_date, :quantity, :status)
   end
 end

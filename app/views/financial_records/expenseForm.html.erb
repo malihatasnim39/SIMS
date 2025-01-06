@@ -19,15 +19,15 @@
   </div>
 
   <%= form.submit "Add Expense" %>
+  
   <% if @financial_record.errors.any? %>
-  <div class="error-messages">
-    <h2><%= pluralize(@financial_record.errors.count, "error") %> prohibited this expense from being saved:</h2>
-    <ul>
-      <% @financial_record.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
+    <div class="error-messages">
+      <h2><%= pluralize(@financial_record.errors.count, "error") %> prohibited this expense from being saved:</h2>
+      <ul>
+        <% @financial_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 <% end %>
-
-

@@ -80,10 +80,23 @@ class FinancialRecordsController < ApplicationController
 
   def all_super_expenses
     @club = Club.find(params[:id]) # Find the super club using the passed ID
-    sub_club_ids = Club.where(Parent_Club: @club.Club_ID).pluck(:Club_ID) # Fetch IDs of sub-clubs
+
+    # Fetch IDs of sub-clubs
+    sub_club_ids = Club.where(Parent_Club: @club.Club_ID).pluck(:Club_ID)
+
     # Fetch financial records tied to those sub-clubs
     @expenses = FinancialRecord.where(Club_ID: sub_club_ids)
+
+    # Total budget of the super club
+    @total_budget = @club.Budget
+
+    # Total spent for the super club (sum of amounts in financial records)
+    @total_spent = @expenses.sum(:Amount)
+
+    # Remaining budget
+    @remaining_budget = @total_budget - @total_spent
   end
+
 
   def sub_club_expenses
     # Fetch all sub-clubs (those with Parent_Club not null and Is_Super_Club is false)
@@ -104,10 +117,21 @@ class FinancialRecordsController < ApplicationController
   end
 
   def all_sub_expenses
-    @club = Club.find(params[:id])  # Find the sub-club using the passed ID
-    @expenses = FinancialRecord.joins(:club, :vendor)  # Ensure we join with both club and vendor
-                               .where('"financial_records"."Club_ID" = ?', @club.Club_ID)  # Match the Club_ID
+    @club = Club.find(params[:id]) # Find the sub-club using the passed ID
+
+    # Fetch financial records tied to this sub-club
+    @expenses = FinancialRecord.joins(:club, :vendor).where('"financial_records"."Club_ID" = ?', @club.Club_ID)
+
+    # Total budget for the sub-club
+    @total_budget = @club.Budget
+
+    # Total spent by the sub-club
+    @total_spent = @expenses.sum(:Amount)
+
+    # Remaining budget for the sub-club
+    @remaining_budget = @total_budget - @total_spent
   end
+
 
   def delete_confirmation
     @financial_record = FinancialRecord.find(params[:id])

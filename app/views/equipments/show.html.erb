@@ -1,16 +1,21 @@
-<h1><%= @equipment.Equipment_Name %></h1>
-<p>Receipt: <%= @equipment.Financial_Record_Id %></p>
-<p>Club: <%= @equipment.Club_ID %></p>
-<p>Vendor: <%= @equipment.Vendor_ID %></p>
+<div class="equipment-details">
+  <div class="equipment-header">
+    <h1 class="equipment-name"><%= @equipment.Equipment_Name %></h1>
+  </div>
 
-<ul>
-  <li><%= link_to "Edit", edit_equipment_path(@equipment), id: "open-overlay" %></li>
-  <li><%= link_to "Delete", equipment_path(@equipment), data: {
-    turbo_method: :delete,
-    turbo_confirm: "Are you sure?"
-  } %></li>
-  <li><%= link_to "Back", group_items_path(@equipment.Equipment_Name) %></li>
-</ul>
+  <div class="equipment-info">
+    <p class="equipment-receipt">📜 Receipt: <%= @equipment.financial_record&.Title || "No record associated" %></p>
+    <p class="equipment-club">🏢 Club: <%= @equipment.club&.Club_Name || "No club associated" %></p>
+    <p class="equipment-vendor">🏷️ Vendor: <%= @equipment.vendor&.Name || "No vendor associated" %></p>
+  </div>
+
+  <div class="equipment-actions">
+    <%= link_to "Edit", edit_equipment_path(@equipment), id: "open-overlay", class: "button edit-button" %>
+    <%= link_to "Delete", equipment_path(@equipment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "button delete-button" %>
+    <%= link_to "Back", group_items_path(@equipment.Equipment_Name), class: "button back-button" %>
+  </div>
+</div>
+
 
 <div class="overlay" id="overlay" style="display: none;">
   <div class="overlay-content">

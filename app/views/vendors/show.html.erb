@@ -1,12 +1,23 @@
-<h1><%= @vendor.Name %></h1>
-<p>Phone: <%= @vendor.Phone_Number %></p>
-<p>Address: <%= @vendor.Address %></p>
+<div class="vendor-details">
+  <div class="vendor-header">
+    <h1 class="vendor-name"><%= @vendor.Name %></h1>
+    <p class="vendor-phone">📞 <%= @vendor.Phone_Number %></p>
+    <p class="vendor-address"><%= @vendor.Address %></p>
+  </div>
 
-<ul>
-  <li><%= link_to "Edit", edit_vendor_path(@vendor), id: "open-overlay" %></li>
-  <li><%= button_to "Delete", @product, method: :delete, data: { turbo_confirm: "Are you sure?" } %></li>
-  <li><%= link_to "Back", vendors_path %></li>
-</ul>
+  <div class="vendor-supplies">
+    <h1>Supplies</h1>
+    <ul class="supplies-list">
+      <li>No items found in this group.</li>
+    </ul>
+  </div>
+
+  <div class="vendor-actions">
+    <%= link_to "Go Back", vendors_path, class: "button go-back" %>
+    <%= link_to "Update Vendor", edit_vendor_path(@vendor), class: "button update-vendor" %>
+    <%= button_to "Delete Vendor", vendor_path(@vendor), method: :delete, data: { confirm: "Are you sure?" }, class: "button delete-vendor" %>
+  </div>
+</div>
 
 <div class="overlay" id="overlay" style="display: none;">
   <div class="overlay-content">

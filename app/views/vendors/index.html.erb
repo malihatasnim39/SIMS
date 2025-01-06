@@ -1,19 +1,19 @@
 <header>
-  <%= image_tag 'back-icon.png', alt: 'Back', style: 'width: 20px; cursor: pointer;' %>
+  <%= image_tag 'back-icon.svg', alt: 'Back' %>
   <div class="search-bar">
     <%= form_with url: vendors_path, method: :get, local: true, class: "search-form" do %>
       <%= text_field_tag :query, params[:query], placeholder: "Search vendors...", class: "search-input" %>
   </div>
       <%= submit_tag "Search", class: "search-button" %>
     <% end %>
-  <%= image_tag 'user-icon.png', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
+  <%= image_tag 'user-icon.svg', alt: 'User' %>
 </header>
 
 <div class="container">
   <div class="sort">
     <span>Sorted by Availability</span>
     <span>
-      <%= image_tag 'filter-icon.png', alt: 'Filter', style: 'width: 20px;' %>
+      <%= image_tag 'filter-icon.svg', alt: 'Filter', style: 'width: 20px;' %>
     </span>
   </div>
   <div class="cards">
@@ -22,13 +22,17 @@
       <div class="card">
         <div class="card-content">
           <div class="card-title"><%= vendor.Name %></div>
+          <div class="details">
+            <!-- Add additional item details here if needed -->
+            <p>PIC: TBA</p>
+          </div>
         </div>
-        <%= link_to ">", vendor, class: "more-link" %>
+        <%= link_to image_tag('arrow-icon.svg'), vendor, class: "more-link" %>
       </div>
     <% end %>
     <!-- "+" card to open the modal -->
     <div class="card add-card">
-      <%= link_to "+", new_vendor_path, id: "open-overlay", class: "add-link" %>
+      <%= link_to image_tag('plus-icon.svg'), new_vendor_path, id: "open-overlay", class: "add-link" %>
     </div>
   </div>
 </div>

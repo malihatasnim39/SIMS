@@ -1,37 +1,41 @@
 <header>
-  <%= image_tag 'back-icon.png', alt: 'Back', style: 'width: 20px; cursor: pointer;' %>
+  <%= image_tag 'back-icon.svg', alt: 'Back' %>
   <div class="search-bar">
     <%= form_with url: equipments_path, method: :get, local: true, class: "search-form" do %>
       <%= text_field_tag :query, params[:query], placeholder: "Search equipment...", class: "search-input" %>
   </div>
       <%= submit_tag "Search", class: "search-button" %>
     <% end %>
-  <%= image_tag 'user-icon.png', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
+  <%= image_tag 'user-icon.svg', alt: 'User' %>
 </header>
 
 <div class="container">
   <div class="sort">
     <span>Sorted by Availability</span>
     <span>
-      <%= image_tag 'filter-icon.png', alt: 'Filter', style: 'width: 20px;' %>
+      <%= image_tag 'filter-icon.svg', alt: 'Filter', style: 'width: 44px;' %>
     </span>
   </div>
-  <div class="cards">
-    <!-- Loop through equipment items -->
-    <% @unique_equipments.each do |equipment| %>
-      <div class="card">
-        <div class="card-content">
-          <div class="card-title"><%= equipment.Equipment_Name %></div>
-          <div class="quantity">Quantity: <%= @equipment.where(Equipment_Name: equipment.Equipment_Name ).size %></div>
+  <% if @unique_equipments.present? %>
+    <div class="cards">
+      <!-- Loop through equipment items -->
+      <% @unique_equipments.each do |equipment| %>
+        <div class="card">
+          <div class="card-content">
+            <div class="card-title"><%= equipment.Equipment_Name %></div>
+            <div class="quantity">Quantity: <%= @equipment.where(Equipment_Name: equipment.Equipment_Name ).size %></div>
+          </div>
+          <%= link_to image_tag('arrow-icon.svg'), group_items_path(equipment.Equipment_Name), class: "more-link" %>
         </div>
-        <%= link_to ">", group_items_path(equipment.Equipment_Name), class: "more-link" %>
+      <% end %>
+      <!-- "+" card to open the modal -->
+      <div class="card add-card">
+        <%= link_to image_tag('plus-icon.svg'), new_equipment_path, id: "open-overlay", class: "add-link" %>
       </div>
-    <% end %>
-    <!-- "+" card to open the modal -->
-    <div class="card add-card">
-      <%= link_to "+", new_equipment_path, id: "open-overlay", class: "add-link" %>
     </div>
-  </div>
+  <% else %>
+    <p>No group found.</p>
+  <% end %>
 </div>
 
 <div class="overlay" id="overlay" style="display: none;">

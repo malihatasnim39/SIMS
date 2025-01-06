@@ -9,6 +9,11 @@ class ClubsController < ApplicationController
     @total_budget = @clubs.sum(:Budget)
   end
 
+  def show
+    @club = Club.find(params[:id])
+    render partial: "club_details", locals: { club: @club }
+  end
+
   def show_children
     @parent_club = Club.find(params[:id])
     @child_clubs = Club.where(Parent_Club: @parent_club.Club_ID)

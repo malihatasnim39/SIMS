@@ -60,7 +60,8 @@ p {
   text-align: center;
 }
 
-input {
+input,
+select {
   padding: 15px;
   border-radius: 60px;
 }
@@ -70,7 +71,8 @@ h2 {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+select {
   border-radius: 50;
   background-color: transparent;
   border: 1px solid var(--Highlight-Color);
@@ -123,4 +125,20 @@ html {
   display: flex;
   width: 100%;
   justify-content: center;
+}
+
+.container {
+  width: 100%;
+  justify-self: center;
+}
+
+.field {
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  width: 300px;
+}
+.field label {
+  margin-bottom: 10px;
+  color: white;
 }

@@ -170,7 +170,7 @@ a:hover {
 
 .modal-content {
   background-color: black;
-  margin: 20% auto;
+  margin: 20% auto 0px auto;
   padding: 20px;
   border: 1px solid #888;
   width: 300px;

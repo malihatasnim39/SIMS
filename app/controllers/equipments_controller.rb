@@ -7,9 +7,9 @@ class EquipmentsController < ApplicationController
 
     if params[:query].present?
       query = params[:query].downcase
-      @unique_equipments = Equipment.where('LOWER("Equipment_Name") LIKE ?', "%#{query}%").distinct
+      @unique_equipments = Equipment.where('LOWER("Equipment_Name") LIKE ?', "%#{query}%").distinct.order(:Equipment_Name)
     else
-      @unique_equipments = Equipment.select(:Equipment_Name).distinct
+      @unique_equipments = Equipment.select(:Equipment_Name).distinct.order(:Equipment_Name)
     end
   end
 
@@ -35,13 +35,23 @@ class EquipmentsController < ApplicationController
   end
 
   def create
-    @equipment = Equipment.new(equipment_params)
+    quantity = params[:equipment][:quantity].to_i
+    quantity = 1 if quantity < 1 # Default to at least one record
 
-    if @equipment.save
-      redirect_to @equipment, notice: "Equipment added successfully!"
-    else
-      render partial: "form", locals: { equipment: @equipment }
+    equipment_params_without_quantity = equipment_params.except(:quantity) # Remove quantity from strong parameters
+
+    ActiveRecord::Base.transaction do
+      @equipments = []
+      quantity.times do
+        @equipments << Equipment.create!(equipment_params_without_quantity)
+      end
     end
+
+    redirect_to equipments_path, notice: "#{quantity} Equipment record(s) created successfully!"
+  rescue ActiveRecord::RecordInvalid => e
+    @equipment = Equipment.new(equipment_params_without_quantity)
+    flash.now[:alert] = "Error creating equipment: #{e.message}"
+    render partial: "form", locals: { equipment: @equipment }
   end
 
   def edit
@@ -67,6 +77,6 @@ class EquipmentsController < ApplicationController
   end
 
   def equipment_params
-    params.require(:equipment).permit(:Equipment_Name, :Financial_Record_Id, :Club_ID, :Vendor_ID)
+    params.require(:equipment).permit(:Equipment_Name, :Financial_Record_Id, :Club_ID, :Vendor_ID, :quantity)
   end
 end

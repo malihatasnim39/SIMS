@@ -16,25 +16,48 @@
       <%= image_tag 'filter-icon.svg', alt: 'Filter', style: 'width: 20px;' %>
     </span>
   </div>
+
+  <!-- Cards for available items -->
   <% if @items.present? %>
     <div class="cards">
       <% @items.each do |item| %>
-        <div class="card">
-          <div class="card-content">
-            <div class="card-title"><%= item.Equipment_Name %></div>
-            <div class="details">
-              <!-- Add additional item details here if needed -->
-              <p>ID: <%= item.Equipment_ID %> | <%= item.Status %></p>
+        <% if item.Status != 'Unavailable' %> <!-- Show only available items here -->
+          <div class="card">
+            <div class="card-content">
+              <div class="card-title"><%= item.Equipment_Name %></div>
+              <div class="details">
+                <!-- Add additional item details here if needed -->
+                <p>ID: <%= item.Equipment_ID %> | <%= item.Status %></p>
+              </div>
             </div>
+            <%= link_to image_tag('arrow-icon.svg'), item, class: "more-link" %>
           </div>
-          <%= link_to image_tag('arrow-icon.svg'), item, class: "more-link" %>
-        </div>
+        <% end %>
       <% end %>
     </div>
   <% else %>
     <p>No items found in this group.</p>
   <% end %>
 </div>
+
+  <!-- Cards for unavailable items -->
+  <% if @items.any? { |item| item.Status == 'Unavailable' } %>
+    <div class="cards unavailable-cards">
+      <% @items.each do |item| %>
+        <% if item.Status == 'Unavailable' %> <!-- Show only unavailable items here -->
+          <div class="card unavailable-card">
+            <div class="card-content">
+              <div class="card-title"><%= item.Equipment_Name %></div>
+              <div class="details">
+                <p>ID: <%= item.Equipment_ID %> | <%= item.Status %></p>
+              </div>
+            </div>
+            <%= link_to image_tag('arrow-icon.svg'), item, class: "more-link" %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 
 <div class="footer">
   <div class="btn active">

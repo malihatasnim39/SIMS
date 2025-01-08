@@ -27,7 +27,8 @@
     <% end %>
   </div>
 
-  <div>
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <%= form.number_field :quantity, min: 1, value: 1, placeholder: "Quantity", style: "width: 80px;" %>
     <%= form.submit "Save Equipment", class: "button" %>
   </div>
 <% end %>

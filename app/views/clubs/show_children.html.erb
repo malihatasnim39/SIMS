@@ -23,7 +23,7 @@
     </div>
 
     <div class="buttonsContainer">
-        <%= button_to "Edit Club", edit_club_path(@parent_club), method: :get, class: "btn btn-primary" %>
+        <%= link_to "Edit Club", edit_club_path(@parent_club), class: "btn btn-primary", data: { toggle: "modal", target: "#editClubModal" } %>
         <%= button_to "Create new sub club", new_sub_club_clubs_path(parent_club_id: @parent_club.id), method: :get, class: "btn btn-secondary" %>
     </div>
 
@@ -47,20 +47,23 @@
                     <path d="M25.7687 11.6667H16.3333V2.23125C16.3333 0.998958 15.2906 0 14 0C12.7094 0 11.6667 0.998958 11.6667 2.23125V11.6667H2.23125C0.998958 11.6667 0 12.7094 0 14C0 15.2906 0.998958 16.3333 2.23125 16.3333H11.6667V25.7687C11.6667 27.001 12.7094 28 14 28C15.2906 28 16.3333 27.001 16.3333 25.7687V16.3333H25.7687C27.001 16.3333 28 15.2906 28 14C28 12.7094 27.001 11.6667 25.7687 11.6667Z" fill="#072326" />
                 </svg>
             </a>
-
         </div>
     </div>
     <% end %>
 
-    <!-- Modal Structure -->
+    <!-- Modal Structure for Club Details -->
     <div id="clubModal" class="modal">
         <div class="modal-content">
-            <span class="close"><svg width="15" height="15" viewBox="0 0 55 55" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M51.0605 3.0625L3.06055 51.0625" stroke="black" stroke-width="8" stroke-linecap="round" />
-                    <path d="M3 3L51 51" stroke="black" stroke-width="8" stroke-linecap="round" />
-                </svg>
-            </span>
+            <span class="close">&times;</span>
             <div id="modalClubDetails"></div>
+        </div>
+    </div>
+
+    <!-- Modal Structure for Edit Club -->
+    <div id="editClubModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalEditClub"></div>
         </div>
     </div>
 

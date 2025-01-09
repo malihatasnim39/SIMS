@@ -28,6 +28,7 @@ class ClubsController < ApplicationController
   def edit
     @club = Club.find(params[:id])
     @super_clubs = Club.where(Is_Super_Club: true)
+    render partial: "edit_form", locals: { club: @club }
   end
 
   def update

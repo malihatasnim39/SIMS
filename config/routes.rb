@@ -6,5 +6,8 @@ Rails.application.routes.draw do
     end
   end
 
+  # Route for balance sheet
   get "balance_sheet/:id", to: "borrowings#balance_sheet", as: "borrowing_balance_sheet"
+  get "borrowings/notification", to: "borrowings#notification", as: "borrowing_notification"
+  get "/equipments/:id/stock", to: "equipments#stock"
 end

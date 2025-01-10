@@ -1,8 +1,12 @@
 <div class="frame">
   <header class="header">
     <button class="back-btn" onclick="history.back()">←</button>
+    <!-- Search Form -->
     <div class="search-bar">
-      <input type="text" id="search" placeholder="Search" />
+      <%= form_with url: borrowing_balance_sheet_path(@club), method: :get, local: true do %>
+        <input type="text" name="search" id="search" placeholder="Search" value="<%= params[:search] %>" />
+        <button type="submit">Search</button>
+      <% end %>
     </div>
     <div class="user-icon">👤</div>
   </header>
@@ -36,7 +40,7 @@
             <!-- Borrower (PIC) -->
             <td>
               <% if borrowing.person_in_charge.present? %>
-                <%= borrowing.person_in_charge.id %> <!-- Or use any relevant attribute from `user_data` -->
+                <%= borrowing.person_in_charge.name || 'N/A' %>
               <% else %>
                 N/A
               <% end %>
@@ -51,7 +55,7 @@
         <% end %>
       <% else %>
         <tr>
-          <td colspan="7">No borrowings found.</td>
+          <td colspan="6">No borrowings found.</td>
         </tr>
       <% end %>
     </tbody>

@@ -19,24 +19,41 @@ class BorrowingsController < ApplicationController
   end
 
   def balance_sheet
-    @borrowings = Borrowing.includes(:equipment, :club).where(club_id: @club.id)
+    @club = Club.find(params[:id]) # Find the club by the ID passed in the URL
+    @borrowings = Borrowing.includes(:equipment, :person_in_charge).where(club_id: @club.id)
+
+    # Handle search functionality
+    if params[:search].present?
+      search_term = params[:search].downcase
+      @borrowings = @borrowings.select do |borrowing|
+        (borrowing.equipment&.Equipment_Name&.downcase&.include?(search_term)) ||
+        (borrowing.person_in_charge&.name&.downcase&.include?(search_term))
+      end
+    end
   end
 
   def new
     @borrowing = Borrowing.new
-    @equipments = Equipment.all
     @clubs = Club.all
+    @equipments = Equipment.all
   end
 
   def create
     @borrowing = Borrowing.new(borrowing_params)
-    if @borrowing.save
-      redirect_to borrowings_path, notice: "Borrowing record created successfully."
+    equipment = Equipment.find(@borrowing.equipment_id)
+
+    if equipment.stock >= @borrowing.quantity
+      if @borrowing.save
+        equipment.update(stock: equipment.stock - @borrowing.quantity)
+        redirect_to borrowing_notification_path, notice: "Borrowing record created successfully."
+      else
+        @equipments = Equipment.all
+        @clubs = Club.all
+        flash[:alert] = @borrowing.errors.full_messages.to_sentence
+        redirect_to borrowing_notification_path, alert: "Failed to create borrowing record."
+      end
     else
-      @equipments = Equipment.all
-      @clubs = Club.all
-      flash[:alert] = @borrowing.errors.full_messages.to_sentence
-      render :new
+      redirect_to borrowing_notification_path, alert: "Not enough stock available for the selected item."
     end
   end
 
@@ -51,21 +68,34 @@ class BorrowingsController < ApplicationController
 
     if @borrowing.update(borrowing_params)
       if old_equipment != @borrowing.equipment || old_quantity != @borrowing.quantity
-        old_equipment.update!(stock: old_equipment.stock + old_quantity)
-        @borrowing.reduce_stock_on_borrow
+        old_equipment.update(stock: old_equipment.stock + old_quantity)
+        @borrowing.equipment.update(stock: @borrowing.equipment.stock - @borrowing.quantity)
       end
-      redirect_to borrowings_path, notice: "Borrowing record updated successfully."
+      redirect_to borrowing_notification_path, notice: "Borrowing record updated successfully."
     else
       @equipments = Equipment.all
       @clubs = Club.all
       flash[:alert] = @borrowing.errors.full_messages.to_sentence
-      render :edit
+      redirect_to borrowing_notification_path, alert: "Failed to update borrowing record."
     end
   end
 
   def destroy
+    equipment = @borrowing.equipment
+    equipment.update(stock: equipment.stock + @borrowing.quantity)
     @borrowing.destroy
-    redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
+    redirect_to borrowing_notification_path, notice: "Borrowing record deleted successfully."
+  end
+
+  def equipment_by_club
+    club_id = params[:club_id]
+    equipments = Equipment.where(Club_ID: club_id)
+
+    if equipments.any?
+      render json: { equipments: equipments.map { |e| { id: e.Equipment_ID, name: e.Equipment_Name, stock: e.stock } } }
+    else
+      render json: { equipments: [] }, status: :not_found
+    end
   end
 
   private

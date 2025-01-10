@@ -30,9 +30,23 @@
       <% @overdue.each do |item| %>
         <div class="card overdue-card">
           <div class="card-content">
-            <p class="item-name"><strong><%= item.equipment&.Equipment_Name %></strong></p>
-            <p class="borrower-name"><%= item.club&.Club_Name %></p>
-            <p class="overdue-time">Overdue by <%= (Date.today - item.due_date.to_date).to_i %> days</p>
+            <!-- Name of Item -->
+            <p class="item-name"><strong><%= item.equipment&.Equipment_Name || "N/A" %></strong></p>
+            
+            <!-- Quantity -->
+            <p class="quantity">Quantity: <%= item.quantity || "N/A" %></p>
+            
+            <!-- Borrowed By (PIC) -->
+            <p class="pic">
+              <% if item.person_in_charge.present? %>
+                Borrowed by: <%= item.person_in_charge.name || "N/A" %>
+              <% else %>
+                Borrowed by: N/A
+              <% end %>
+            </p>
+            
+            <!-- Overdue Info -->
+            <p class="overdue-time">Overdue by: <%= (Date.today - item.due_date.to_date).to_i %> days</p>
           </div>
           <span class="bell-icon">🔔</span>
         </div>
@@ -41,31 +55,36 @@
   </section>
 
   <section class="borrowed-items">
-  <h2>Recent Borrowings</h2>
-  <div class="borrowed-list">
-    <% @borrowed.each do |item| %>
-      <div class="card">
-        <div class="card-content">
-          <p class="item-name"><strong><%= item.equipment&.Equipment_Name %></strong></p>
-          <p class="borrower-name"><%= item.club&.Club_Name %></p>
-          <p class="borrow-period">
-            <%= item.borrow_date.strftime('%d/%m/%Y') %> - <%= item.due_date.strftime('%d/%m/%Y') %>
-          </p>
-          <p class="quantity">Quantity: <%= item.quantity %></p>
-          <p class="pic">
-            Borrowed by: 
-            <% if item.person_in_charge.present? %>
-              <%= item.person_in_charge.id %> <!-- Replace with `name` or a relevant attribute -->
-            <% else %>
-              N/A
-            <% end %>
-          </p>
+    <h2>Recent Borrowings</h2>
+    <div class="borrowed-list">
+      <% @borrowed.each do |item| %>
+        <div class="card">
+          <div class="card-content">
+            <!-- Name of Item -->
+            <p class="item-name"><strong><%= item.equipment&.Equipment_Name || "N/A" %></strong></p>
+            
+            <!-- Quantity -->
+            <p class="quantity">Quantity: <%= item.quantity || "N/A" %></p>
+            
+            <!-- Borrowed By (PIC) -->
+            <p class="pic">
+              <% if item.person_in_charge.present? %>
+                Borrowed by: <%= item.person_in_charge.name || "N/A" %>
+              <% else %>
+                Borrowed by: N/A
+              <% end %>
+            </p>
+            
+            <!-- Borrow Period -->
+            <p class="borrow-period">
+              <%= item.borrow_date.strftime('%d/%m/%Y') %> - <%= item.due_date.strftime('%d/%m/%Y') %>
+            </p>
+          </div>
+          <%= link_to "View More", edit_borrowing_path(item), class: "btn-view-more" %>
         </div>
-        <%= link_to "View More", edit_borrowing_path(item), class: "btn-view-more" %>
-      </div>
-    <% end %>
-  </div>
-</section>
+      <% end %>
+    </div>
+  </section>
 
   <footer class="footer-nav">
     <button class="footer-btn">Equipment</button>

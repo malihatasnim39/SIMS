@@ -33,7 +33,7 @@ class ClubsController < ApplicationController
   def update
     @club = Club.find(params[:id])
     if @club.update(club_params)
-      redirect_to clubs_path, notice: "Club updated successfully."
+        redirect_to show_children_club_path(params[:id])
     else
       @super_clubs = Club.where(Is_Super_Club: true)
       render :edit, status: :unprocessable_entity
@@ -52,7 +52,7 @@ class ClubsController < ApplicationController
       if @club.Is_Super_Club
         redirect_to clubs_path, notice: "Club created successfully."
       else
-        redirect_to show_children_club_path(params[:club][:Parent_Club]), alert: "Failed to create Sub Club."
+        redirect_to show_children_club_path(params[:club][:Parent_Club])
       end
     end
   end

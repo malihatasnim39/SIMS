@@ -26,6 +26,11 @@ class ClubsController < ApplicationController
     render :new_sub_club
   end
 
+  def sub_clubs
+    @sub_clubs = Club.where(Parent_Club: params[:id])
+    render json: @sub_clubs
+  end
+
   def edit
     @club = Club.find(params[:id])
     @super_clubs = Club.where(Is_Super_Club: true)

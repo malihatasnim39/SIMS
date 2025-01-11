@@ -2,9 +2,9 @@ class ReportsController < ApplicationController
   def index
   end
 
-   def generate
+  def generate
     @super_club = Club.find(params[:super_club_id])
-    @sub_club = Club.find(params[:sub_club_id])
+    @sub_club = Club.find(params[:sub_club_id]) # Use find_by to handle nil case
     @start_date = params[:start_date]
     @end_date = params[:end_date]
 

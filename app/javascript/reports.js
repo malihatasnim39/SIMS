@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         subClubSelect.innerHTML = '<option value="">Select Sub Club</option>';
         data.forEach((subClub) => {
           const option = document.createElement("option");
-          option.value = subClub.id;
+          option.value = subClub.Club_ID;
           option.textContent = subClub.Club_Name;
           subClubSelect.appendChild(option);
         });

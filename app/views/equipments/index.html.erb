@@ -1,13 +1,4 @@
-<header>
-  <%= image_tag 'back-icon.svg', alt: 'Back' %>
-  <div class="search-bar">
-    <%= form_with url: equipments_path, method: :get, local: true, class: "search-form" do %>
-      <%= text_field_tag :query, params[:query], placeholder: "Search equipment...", class: "search-input" %>
-  </div>
-      <%= submit_tag "Search", class: "search-button" %>
-    <% end %>
-  <%= image_tag 'user-icon.svg', alt: 'User' %>
-</header>
+<%= render 'shared/header', search_url: equipments_path %>
 
 <div class="container">
   <div class="sort">
@@ -37,13 +28,12 @@
       </div>
     </div>
 
-    <hr>
-
     <!-- Cards with equipment having zero quantity or unavailable status -->
-    <div class="cards">
-      <% @unique_equipments.each do |equipment| %>
-        <% available_equipment_count = @equipment.where(Equipment_Name: equipment.Equipment_Name, Status: 'Available').size %>
-        <% if available_equipment_count == 0 %>
+    <% @unique_equipments.each do |equipment| %>
+      <% available_equipment_count = @equipment.where(Equipment_Name: equipment.Equipment_Name, Status: 'Available').size %>
+      <% if available_equipment_count == 0 %>
+        <br><hr><br>
+        <div class="cards">
           <div class="card">
             <div class="card-content">
               <div class="card-title"><%= equipment.Equipment_Name %></div>
@@ -51,14 +41,14 @@
             </div>
             <%= link_to image_tag('arrow-icon.svg'), group_items_path(equipment.Equipment_Name), class: "more-link" %>
           </div>
-        <% end %>
+        </div>
       <% end %>
-    </div>
+    <% end %>
   <% else %>
     <p style="text-align:center;">No group found.</p>
     <!-- "+" card to open the modal -->
     <div class="card add-card">
-      <%= link_to image_tag('plus-icon.svg'), new_equipment_path, id: "open-overlay", class: "add-link" %>
+      <%= link_to image_tag('plus-icon.svg'), new_equipment_path, form_url: equipments_path, id: "open-overlay", class: "add-link" %>
     </div>
   <% end %>
 </div>
@@ -74,14 +64,4 @@
   </div>
 </div>
 
-<div class="footer">
-  <div class="btn active">
-    <%= link_to "Equipment", equipments_path, class: "move-link active" %>
-  </div>
-  <div class="btn">
-    <%= link_to "Borrow", vendors_path, class: "move-link" %>
-  </div>
-  <div class="btn">
-    <%= link_to "Vendor", vendors_path, class: "move-link" %>
-  </div>
-</div>
+<%= render 'shared/equipment_footer', active_tab: :equipment %>

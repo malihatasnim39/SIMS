@@ -31,7 +31,9 @@ class EquipmentsController < ApplicationController
 
   def new
     @equipment = Equipment.new
-    render partial: "form", locals: { equipment: @equipment }
+    @form_url = equipments_path  # Set the form URL for the form submission
+    @show_quantity_field = true # Set this flag to determine if the quantity field should be shown
+    render partial: "form", locals: { equipment: @equipment, form_url: @form_url, show_quantity_field: @show_quantity_field }
   end
 
   def create
@@ -55,7 +57,9 @@ class EquipmentsController < ApplicationController
   end
 
   def edit
-    render partial: "form", locals: { equipment: @equipment }
+    @form_url = equipment_path(@equipment)  # Set the form URL for the form submission
+    @show_quantity_field = false # Or any condition to control the field visibility
+    render partial: "form", locals: { equipment: @equipment, form_url: @form_url, show_quantity_field: @show_quantity_field }
   end
 
   def update

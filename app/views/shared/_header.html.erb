@@ -1,0 +1,12 @@
+<header>
+  <a href="<%= request.referer || root_path %>" onclick="history.back(); return false;" class="back-link">
+    <%= image_tag 'back-icon.svg', alt: 'Back' %>
+  </a>
+  <div class="search-bar">
+    <%= form_with url: search_url, method: :get, local: true, class: "search-form" do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "search-input" %>
+  </div>
+      <%= submit_tag "Search", class: "search-button" %>
+    <% end %>
+  <%= image_tag 'user-icon.svg', alt: 'User' %>
+</header>

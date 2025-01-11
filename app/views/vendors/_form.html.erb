@@ -14,7 +14,7 @@
   </div>
 
   <div>
-    <%= form.text_field :Address, placeholder: "Address" %>
+    <%= form.text_area :Address, placeholder: "Address", rows: 5, cols: 40, class: "textarea" %>
     <% vendor.errors.full_messages_for(:Address).each do |message| %>
       <div><%= message %></div>
     <% end %>

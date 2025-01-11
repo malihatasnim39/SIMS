@@ -1,13 +1,4 @@
-<header>
-  <%= image_tag 'back-icon.svg', alt: 'Back' %>
-  <div class="search-bar">
-    <%= form_with url: vendors_path, method: :get, local: true, class: "search-form" do %>
-      <%= text_field_tag :query, params[:query], placeholder: "Search vendors...", class: "search-input" %>
-  </div>
-      <%= submit_tag "Search", class: "search-button" %>
-    <% end %>
-  <%= image_tag 'user-icon.svg', alt: 'User' %>
-</header>
+<%= render 'shared/header', search_url: vendors_path %>
 
 <div class="container">
   <div class="sort">
@@ -48,14 +39,4 @@
   </div>
 </div>
 
-<div class="footer">
-  <div class="btn">
-    <%= link_to "Equipment", equipments_path, class: "move-link" %>
-  </div>
-  <div class="btn">
-    <%= link_to "Borrow", vendors_path, class: "move-link" %>
-  </div>
-  <div class="btn active">
-    <%= link_to "Vendor", vendors_path, class: "move-link active" %>
-  </div>
-</div>
+<%= render 'shared/equipment_footer', active_tab: :vendor %>

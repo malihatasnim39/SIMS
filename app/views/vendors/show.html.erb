@@ -13,8 +13,8 @@
   </div>
 
   <div class="vendor-actions">
-    <%= link_to "Go Back", vendors_path, class: "button go-back" %>
-    <%= link_to "Update Vendor", edit_vendor_path(@vendor), class: "button update-vendor" %>
+    <%= link_to "Back", "#", onclick: "history.back(); return false;", class: "button back-button" %>
+    <%= link_to "Update Vendor", edit_vendor_path(@vendor), id: "open-overlay", class: "button update-vendor" %>
     <%= button_to "Delete Vendor", vendor_path(@vendor), method: :delete, data: { confirm: "Are you sure?" }, class: "button delete-vendor" %>
   </div>
 </div>

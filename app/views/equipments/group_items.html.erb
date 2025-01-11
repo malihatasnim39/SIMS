@@ -1,13 +1,4 @@
-<header>
-  <%= link_to image_tag('back-icon.svg'), equipments_path %>
-  <div class="search-bar">
-    <%= form_with url: group_items_path(@equipment_name), method: :get, local: true, class: "search-form" do %>
-      <%= text_field_tag :query, params[:query], placeholder: "Search equipment...", class: "search-input" %>
-  </div>
-      <%= submit_tag "Search", class: "search-button" %>
-    <% end %>
-  <%= image_tag 'user-icon.svg', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
-</header>
+<%= render 'shared/header', search_url: group_items_path(@equipment_name) %>
 
 <div class="container">
   <div class="sort">
@@ -38,10 +29,12 @@
   <% else %>
     <p>No items found in this group.</p>
   <% end %>
-</div>
+
+
 
   <!-- Cards for unavailable items -->
   <% if @items.any? { |item| item.Status == 'Unavailable' } %>
+    <br><hr><br>
     <div class="cards unavailable-cards">
       <% @items.each do |item| %>
         <% if item.Status == 'Unavailable' %> <!-- Show only unavailable items here -->
@@ -58,15 +51,7 @@
       <% end %>
     </div>
   <% end %>
-
-<div class="footer">
-  <div class="btn active">
-    <%= link_to "Equipment", equipments_path, class: "move-link active" %>
-  </div>
-  <div class="btn">
-    <%= link_to "Borrow", vendors_path, class: "move-link" %>
-  </div>
-  <div class="btn">
-    <%= link_to "Vendor", vendors_path, class: "move-link" %>
-  </div>
 </div>
+
+<%= render 'shared/equipment_footer', active_tab: :equipment %>
+

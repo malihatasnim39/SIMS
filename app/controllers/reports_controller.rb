@@ -1,3 +1,4 @@
+# filepath: /Users/aminbihamta/Software Engineering/SIMS/app/controllers/reports_controller.rb
 class ReportsController < ApplicationController
   def index
   end
@@ -10,7 +11,10 @@ class ReportsController < ApplicationController
 
     # Fetch expenses for the selected sub club within the date range
     @expenses = FinancialRecord.where(Club_ID: @sub_club.Club_ID)
-                               .where("Created_At >= ? AND Created_At <= ?", @start_date, @end_date)
+                               .where("created_at >= ? AND created_at <= ?", @start_date, @end_date)
+
+    # Prepare data for the chart
+    @chart_data = @expenses.group_by_day(:created_at).sum(:Amount)
 
     render :generated
   end

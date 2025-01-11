@@ -1,3 +1,4 @@
+<!-- filepath: /Users/aminbihamta/Software Engineering/SIMS/app/views/reports/generated.html.erb -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <%= javascript_include_tag 'application', type: "module" %>
+
+
 </head>
 
 <body>
@@ -39,7 +43,13 @@
                 <% end %>
             </tbody>
         </table>
+
+        <h2>Expenses Over Time</h2>
+        <%= line_chart @chart_data %>
+
+        <%= javascript_include_tag 'application' %>
     </div>
+
 </body>
 
 </html>

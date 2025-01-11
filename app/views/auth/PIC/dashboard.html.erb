@@ -29,25 +29,30 @@
   </h1>
 
   <!-- Notifications Section -->
-<div>
-  <% @notifications.each do |notification| %>
-    <% borrowing = notification.borrowing %>
-    <% if borrowing && borrowing.equipment %>
-      <div>
-        <strong>Reminder!</strong>
-        <p>
-          <%= borrowing.equipment.Equipment_Name %> is overdue by 
-          <%= ((Time.current - borrowing.due_date) / 1.day).to_i %> days
-        </p>
-        <%= button_to "Return", return_borrowing_path(borrowing), method: :patch, class: "return-button", data: { confirm: "Are you sure you want to mark this borrowing as returned?" } %>
-      </div>
-    <% else %>
-      <div>No associated equipment found for this borrowing.</div>
+  <div>
+    <% @notifications.each do |notification| %>
+      <% borrowing = notification.borrowing %>
+      <% if borrowing && borrowing.equipment %>
+        <div>
+          <strong>Reminder!</strong>
+          <% case borrowing.status %>
+          <% when :returned %>
+            <p>Equipment has been returned</p>
+          <% when :overdue %>
+            <p>
+              <%= borrowing.equipment.Equipment_Name %> is overdue by 
+              <%= ((Time.current - borrowing.due_date) / 1.day).to_i %> days
+            </p>
+            <%= button_to "Return", return_borrowing_path(borrowing), method: :patch, class: "return-button", data: { confirm: "Are you sure you want to mark this borrowing as returned?" } %>
+          <% else %>
+            <p>Due in: <%= (borrowing.due_date.to_date - Date.current).to_i %> days</p>
+          <% end %>
+        </div>
+      <% else %>
+        <div>No associated equipment found for this borrowing.</div>
+      <% end %>
     <% end %>
-  <% end %>
-</div>
-
-</div>
+  </div>
 
   <!-- Latest Borrowed Section -->
   <div>
@@ -58,19 +63,17 @@
           <div>
             <div>
               <h3><%= borrowing.equipment.Equipment_Name %></h3>
-              <p>
-                <% days_difference = (borrowing.due_date.to_date - Date.current).to_i %>
-                <% if days_difference < 0 %>
-                  Overdue by: <%= days_difference.abs %> days
-                <% else %>
-                  Due in: <%= days_difference %> days
-                <% end %>
-              </p>
+              <% case borrowing.status %>
+              <% when :returned %>
+                <p>Equipment has been returned</p>
+              <% when :overdue %>
+                <p>Overdue by: <%= ((Time.current - borrowing.due_date) / 1.day).to_i %> days</p>
+              <% else %>
+                <p>Due in: <%= (borrowing.due_date.to_date - Date.current).to_i %> days</p>
+              <% end %>
             </div>
             <div>
-              <p>
-                Borrowed on <%= borrowing.borrow_date.strftime('%d/%m/%Y') %>
-              </p>
+              <p>Borrowed on <%= borrowing.borrow_date.strftime('%d/%m/%Y') %></p>
               <%= link_to "View More", borrowing_path(borrowing) %>
             </div>
           </div>

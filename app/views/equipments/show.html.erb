@@ -11,7 +11,7 @@
 
   <div class="equipment-actions">
     <%= link_to "Edit", edit_equipment_path(@equipment), id: "open-overlay", class: "button edit-button" %>
-    <%= button_to "Delete", equipment_path(@equipment), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "button delete-button" %>
+    <%= button_to "Delete", @equipment, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
     <%= link_to "Back", "#", onclick: "history.back(); return false;", class: "button back-button" %>
   </div>
 </div>

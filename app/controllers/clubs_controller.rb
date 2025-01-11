@@ -14,6 +14,11 @@ class ClubsController < ApplicationController
     @child_clubs = Club.where(Parent_Club: @parent_club.Club_ID)
   end
 
+  def show
+    @club = Club.find(params[:id])
+    render partial: "club_details", locals: { club: @club }
+  end
+
   def new_sub_club
     @club = Club.new(Is_Super_Club: false, Parent_Club: params[:parent_club_id])
     @super_clubs = Club.where(Is_Super_Club: true)

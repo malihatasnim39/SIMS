@@ -66,11 +66,26 @@ class BorrowingsController < ApplicationController
     redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
   end
 
+  def return
+    borrowing = Borrowing.find(params[:id])
+    if borrowing.update(status: "returned")
+      Notification.where(borrowing_id: borrowing.id).destroy_all # Remove associated notifications
+      flash[:success] = "Borrowing status updated to returned."
+    else
+      flash[:error] = "Failed to update borrowing status."
+    end
+    redirect_to pic_dashboard_path # Adjust to your dashboard route
+  end
+
   private
 
   def set_borrowing
     @borrowing = Borrowing.find(params[:id])
   end
+
+  # before_action :require_pic! # Ensure only PIC users can access this action
+
+
 
   def borrowing_params
     params.require(:borrowing).permit(:equipment_id, :club_id, :borrow_date, :due_date, :status)

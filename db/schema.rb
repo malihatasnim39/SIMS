@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_11_032005) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -32,16 +32,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
   enable_extension "pgsodium.pgsodium"
   enable_extension "vault.supabase_vault"
 
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "borrowing_status", ["borrowed", "returned", "overdue"]
+
   create_table "borrowings", force: :cascade do |t|
     t.integer "equipment_id", null: false
     t.integer "club_id", null: false
-    t.uuid "pic_id"
     t.datetime "borrow_date", null: false
     t.datetime "due_date", null: false
     t.integer "quantity", default: 1, null: false
-    t.string "status", default: "borrowed", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.enum "status", default: "borrowed", null: false, enum_type: "borrowing_status"
   end
 
   create_table "clubs", primary_key: "Club_ID", id: :bigint, default: nil, force: :cascade do |t|
@@ -63,6 +66,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
     t.datetime "Edited_At", precision: nil
     t.string "Equipment_Name", null: false
     t.integer "stock"
+    t.string "Status", default: "Available"
 
     t.unique_constraint ["Equipment_ID"], name: "Equipment_Equipment_ID_key"
   end
@@ -91,14 +95,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.bigint "borrowing_id", null: false
     t.string "notification_type", null: false
     t.text "message", null: false
     t.datetime "triggered_at", precision: nil, null: false
     t.string "status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["borrowing_id"], name: "index_notifications_on_borrowing_id"
+    t.bigint "borrowing_id"
   end
 
   create_table "user_data", id: :uuid, default: nil, force: :cascade do |t|
@@ -112,13 +115,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
     t.string "Phone_Number", null: false
     t.timestamptz "Created_At", default: -> { "now()" }, null: false
     t.datetime "Edited_At", precision: nil
+    t.uuid "PIC"
 
     t.unique_constraint ["Vendor_ID"], name: "Vendor_Vendor_ID_key"
   end
 
   add_foreign_key "borrowings", "clubs", primary_key: "Club_ID", name: "borrowings_club_id_fk"
   add_foreign_key "borrowings", "equipments", primary_key: "Equipment_ID", name: "borrowings_equipment_id_fk"
-  add_foreign_key "borrowings", "user_data", column: "pic_id", name: "borrowings_pic_id_fk"
   add_foreign_key "clubs", "clubs", column: "Parent_Club", primary_key: "Club_ID", name: "clubs_Parent_Club_fkey"
   add_foreign_key "equipments", "clubs", column: "Club_ID", primary_key: "Club_ID", name: "Equipment_Club_ID_fkey"
   add_foreign_key "equipments", "financial_records", column: "Financial_Record_Id", primary_key: "Financial_Record_ID", name: "Equipment_Transaction_ID_fkey"
@@ -126,6 +129,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_05_174943) do
   add_foreign_key "financial_records", "clubs", column: "Club_ID", primary_key: "Club_ID", name: "financial_records_Club_ID_fkey"
   add_foreign_key "financial_records", "vendors", column: "Vendor_ID", primary_key: "Vendor_ID", name: "Financial_Record_Vendor_ID_fkey"
   add_foreign_key "notification_histories", "notifications"
+  add_foreign_key "notifications", "borrowings", name: "notifications_borrowing_id_fkey"
   add_foreign_key "user_data", "auth.users", column: "id", name: "user_data_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "user_data", "clubs", primary_key: "Club_ID", name: "user_data_club_id_fkey1", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "vendors", "auth.users", column: "PIC", name: "vendors_PIC_fkey"
 end

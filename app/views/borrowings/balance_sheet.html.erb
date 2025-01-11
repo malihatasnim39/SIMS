@@ -22,6 +22,8 @@
         <th>Borrower (PIC)</th>
         <th>Date Borrowed</th>
         <th>Date Due</th>
+        <th>Date Returned</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody>
@@ -51,11 +53,23 @@
 
             <!-- Due Date -->
             <td><%= borrowing.due_date ? borrowing.due_date.strftime('%d/%m/%Y') : 'Not Returned' %></td>
+
+            <!-- Date Returned -->
+            <td>
+              <% if borrowing.status == "returned" %>
+                <%= borrowing.updated_at.strftime('%d/%m/%Y') %>
+              <% else %>
+                N/A
+              <% end %>
+            </td>
+
+            <!-- Status -->
+            <td><%= borrowing.status.capitalize %></td>
           </tr>
         <% end %>
       <% else %>
         <tr>
-          <td colspan="6">No borrowings found.</td>
+          <td colspan="8">No borrowings found.</td>
         </tr>
       <% end %>
     </tbody>

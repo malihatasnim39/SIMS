@@ -3,8 +3,12 @@ class BorrowingsController < ApplicationController
   before_action :set_club, only: [ :balance_sheet ]
 
   def index
+    # Update overdue records before fetching them
+    Borrowing.where("due_date < ? AND status = ?", Date.today, "borrowed").update_all(status: "overdue")
+
+    # Fetch the updated records
     @borrowings = Borrowing.includes(:equipment, :club)
-    @overdue = Borrowing.includes(:equipment, :club).where("due_date < ? AND status = ?", Date.today, "borrowed")
+    @overdue = Borrowing.includes(:equipment, :club).where(status: "overdue")
     @borrowed = Borrowing.includes(:equipment, :club).where(status: "borrowed")
   end
 
@@ -19,15 +23,14 @@ class BorrowingsController < ApplicationController
   end
 
   def balance_sheet
-    @club = Club.find(params[:id]) # Find the club by the ID passed in the URL
-    @borrowings = Borrowing.includes(:equipment, :person_in_charge).where(club_id: @club.id)
+    @club = Club.find(params[:id])
+    @borrowings = Borrowing.includes(:equipment).where(club_id: @club.id)
 
-    # Handle search functionality
     if params[:search].present?
       search_term = params[:search].downcase
       @borrowings = @borrowings.select do |borrowing|
-        (borrowing.equipment&.Equipment_Name&.downcase&.include?(search_term)) ||
-        (borrowing.person_in_charge&.name&.downcase&.include?(search_term))
+        borrowing.equipment&.Equipment_Name&.downcase&.include?(search_term) ||
+        borrowing.status&.downcase&.include?(search_term)
       end
     end
   end
@@ -49,7 +52,6 @@ class BorrowingsController < ApplicationController
       else
         @equipments = Equipment.all
         @clubs = Club.all
-        flash[:alert] = @borrowing.errors.full_messages.to_sentence
         redirect_to borrowing_notification_path, alert: "Failed to create borrowing record."
       end
     else
@@ -65,26 +67,44 @@ class BorrowingsController < ApplicationController
   def update
     old_quantity = @borrowing.quantity
     old_equipment = @borrowing.equipment
+    new_quantity = borrowing_params[:quantity].to_i
+    new_equipment = Equipment.find(borrowing_params[:equipment_id])
 
-    if @borrowing.update(borrowing_params)
-      if old_equipment != @borrowing.equipment || old_quantity != @borrowing.quantity
-        old_equipment.update(stock: old_equipment.stock + old_quantity)
-        @borrowing.equipment.update(stock: @borrowing.equipment.stock - @borrowing.quantity)
-      end
-      redirect_to borrowing_notification_path, notice: "Borrowing record updated successfully."
+    available_stock = if old_equipment == new_equipment
+                        new_equipment.stock + old_quantity
     else
-      @equipments = Equipment.all
-      @clubs = Club.all
-      flash[:alert] = @borrowing.errors.full_messages.to_sentence
-      redirect_to borrowing_notification_path, alert: "Failed to update borrowing record."
+                        new_equipment.stock
+    end
+
+    if new_quantity > available_stock
+      redirect_to borrowing_notification_path, alert: "Not enough stock available for the selected item. Update failed."
+    else
+      if @borrowing.update(borrowing_params)
+        # Restore stock for old equipment if it was changed
+        old_equipment.update(stock: old_equipment.stock + old_quantity) if old_equipment && old_equipment != new_equipment
+        # Reduce stock for new equipment
+        new_equipment.update(stock: new_equipment.stock - new_quantity)
+        redirect_to borrowing_notification_path, notice: "Borrowing record updated successfully."
+      else
+        @equipments = Equipment.all
+        @clubs = Club.all
+        redirect_to borrowing_notification_path, alert: @borrowing.errors.full_messages.to_sentence
+      end
     end
   end
 
   def destroy
-    equipment = @borrowing.equipment
-    equipment.update(stock: equipment.stock + @borrowing.quantity)
-    @borrowing.destroy
-    redirect_to borrowing_notification_path, notice: "Borrowing record deleted successfully."
+    ActiveRecord::Base.transaction do
+      # Delete all notifications related to this borrowing
+      Notification.where(borrowing_id: @borrowing.id).destroy_all
+
+      # Now safely delete the borrowing
+      @borrowing.destroy
+    end
+
+    redirect_to borrowing_notification_path, notice: "Borrowing record and associated notifications deleted successfully."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to borrowing_notification_path, alert: "Failed to delete borrowing: #{e.message}"
   end
 
   def equipment_by_club

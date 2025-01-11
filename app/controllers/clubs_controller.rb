@@ -12,6 +12,7 @@ class ClubsController < ApplicationController
   def show_children
     @parent_club = Club.find(params[:id])
     @child_clubs = Club.where(Parent_Club: @parent_club.Club_ID)
+    @total_budget = @child_clubs.sum(:Budget)
   end
 
   def show

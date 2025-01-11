@@ -40,6 +40,12 @@ class ClubsController < ApplicationController
     end
   end
 
+  def destroy
+    @club = Club.find(params[:id])
+    @club.destroy
+    redirect_to clubs_path, notice: "Club deleted successfully."
+  end
+
   def create
     @club = Club.new(club_params)
     if @club.save
@@ -57,6 +63,6 @@ class ClubsController < ApplicationController
   private
 
   def club_params
-    params.require(:club).permit(:Club_Name, :Parent_Club, :Budget).merge(Is_Super_Club: params[:club][:Is_Super_Club] || false)
+    params.require(:club).permit(:Is_Super_Club, :Club_Name, :Parent_Club, :Budget)
   end
 end

@@ -133,4 +133,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_032005) do
   add_foreign_key "user_data", "auth.users", column: "id", name: "user_data_id_fkey", on_update: :cascade, on_delete: :cascade
   add_foreign_key "user_data", "clubs", primary_key: "Club_ID", name: "user_data_club_id_fkey1", on_update: :cascade, on_delete: :cascade
   add_foreign_key "vendors", "auth.users", column: "PIC", name: "vendors_PIC_fkey"
+  add_foreign_key "notifications", "borrowings", column: "borrowing", name: "notifications_borrowing_fkey"
+  add_foreign_key "user_data", "auth.users", column: "id", name: "user_data_id_fkey", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "user_data", "clubs", primary_key: "Club_ID", name: "user_data_club_id_fkey1", on_update: :cascade, on_delete: :cascade
 end

@@ -1,0 +1,30 @@
+<div>
+    <h2>Total Budget: RM<%= @total_budget %></h2>
+</div>
+
+<table>
+    <tbody>
+        <% @clubs.each do |club| %>
+        <tr>
+            <td><%= club.Club_Name %></td>
+            <td>RM<%= club.Budget %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+
+
+
+<h1>Super Clubs</h1>
+<table>
+    <tbody>
+        <% @clubs.each do |club| %>
+        <tr onclick="window.location='<%= show_children_club_path(club) %>'" style="cursor: pointer;">
+            <td><%= club.Club_Name %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+<div>
+    <%= button_to "Add a Super Club", new_super_club_clubs_path, method: :get, class: "btn btn-primary" %>
+</div>

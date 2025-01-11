@@ -11,6 +11,10 @@ class Borrowing < ApplicationRecord
   before_create :reduce_stock_on_borrow
   before_destroy :restore_stock_on_destroy
 
+  # Callbacks for notifications
+  after_create :create_borrowing_notification
+  after_update :check_for_overdue_notification
+
   private
 
   def reduce_stock_on_borrow
@@ -24,5 +28,26 @@ class Borrowing < ApplicationRecord
 
   def restore_stock_on_destroy
     equipment.update!(stock: equipment.stock + quantity) if equipment
+  end
+
+  # Notification logic
+  def create_borrowing_notification
+    Notification.create(
+      borrowing_id: self.id,
+      message: "#{equipment.name} borrowed by #{club.name} on #{borrow_date}.",
+      status: "pending",
+      triggered_at: Time.current
+    )
+  end
+
+  def check_for_overdue_notification
+    if status == "overdue" && !notifications.exists?(message: "#{equipment.name} is overdue.")
+      Notification.create(
+        borrowing_id: self.id,
+        message: "#{equipment.name} is overdue by #{(Date.today - due_date).to_i} days.",
+        status: "delivered",
+        triggered_at: Time.current
+      )
+    end
   end
 end

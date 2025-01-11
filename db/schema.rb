@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_11_032005) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_11_081817) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -75,7 +75,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_032005) do
     t.string "Title", null: false
     t.decimal "Amount", null: false
     t.bigint "Vendor_ID"
-    t.timestamptz "Created_At", default: -> { "now()" }, null: false
+    t.timestamptz "created_at", default: -> { "now()" }, null: false
     t.datetime "Edited_At", precision: nil
     t.integer "Quantity", default: 1, null: false
     t.bigint "Club_ID"
@@ -91,6 +91,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_032005) do
     t.text "failure_reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "message"
     t.index ["notification_id"], name: "index_notification_histories_on_notification_id"
   end
 

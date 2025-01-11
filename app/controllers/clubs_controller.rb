@@ -20,7 +20,7 @@ class ClubsController < ApplicationController
   end
 
   def new_sub_club
-    @club = Club.new(Is_Super_Club: false, Parent_Club: params[:parent_club_id])
+    @club = Club.new(Is_Super_Club: false, Parent_Club: params[:super_club_id])
     @super_clubs = Club.where(Is_Super_Club: true)
     render :new_sub_club
   end
@@ -49,13 +49,10 @@ class ClubsController < ApplicationController
   def create
     @club = Club.new(club_params)
     if @club.save
-      redirect_to clubs_path, notice: "Club created successfully."
-    else
       if @club.Is_Super_Club
-        render :new_super_club, status: :unprocessable_entity
+        redirect_to clubs_path, notice: "Club created successfully."
       else
-        @super_clubs = Club.where(Is_Super_Club: true)
-        render :new_sub_club, status: :unprocessable_entity
+        redirect_to show_children_club_path(params[:club][:Parent_Club]), alert: "Failed to create Sub Club."
       end
     end
   end

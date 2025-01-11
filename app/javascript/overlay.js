@@ -1,4 +1,3 @@
-// app/javascript/overlay.js
 document.addEventListener("DOMContentLoaded", () => {
     const overlay = document.getElementById("overlay");
     const overlayFormContent = document.getElementById("overlay-form-content");
@@ -27,4 +26,44 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.classList.remove("overlay-active"); // Re-enable pointer events on body
         });
     }
+
+    // Handle form submission with AJAX
+    document.addEventListener("submit", (event) => {
+        const form = event.target;
+        if (form.id === "form") {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(form);
+            const submitUrl = form.action;
+
+            fetch(submitUrl, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json(); // Parse JSON response for success
+                    } else {
+                        return response.text().then((html) => {
+                            throw { html, status: response.status };
+                        });
+                    }
+                })
+                .then((data) => {
+                    if (data.success) {
+                        window.location.href = data.redirect_url; // Redirect on success
+                    }
+                })
+                .catch((error) => {
+                    if (error.status === 422) {
+                        overlayFormContent.innerHTML = error.html; // Replace content with error-rendered form
+                    } else {
+                        console.error("Error submitting form:", error);
+                    }
+                });
+        }
+    });
 });

@@ -1,26 +1,26 @@
-<%= form_with model: vendor do |form| %>
+<%= form_with model: vendor, remote: true, id: "vendor-form" do |form| %>
   <div>
     <%= form.text_field :Name, placeholder: "Vendor Name" %>
     <% vendor.errors.full_messages_for(:Name).each do |message| %>
-      <div><%= message %></div>
+      <div class="error-message"><%= message %></div>
     <% end %>
   </div>
 
   <div>
     <%= form.text_field :Phone_Number, placeholder: "Phone Number" %>
     <% vendor.errors.full_messages_for(:Phone_Number).each do |message| %>
-      <div><%= message %></div>
+      <div class="error-message"><%= message %></div>
     <% end %>
   </div>
 
   <div>
     <%= form.text_area :Address, placeholder: "Address", rows: 5, cols: 40, class: "textarea" %>
     <% vendor.errors.full_messages_for(:Address).each do |message| %>
-      <div><%= message %></div>
+      <div class="error-message"><%= message %></div>
     <% end %>
   </div>
 
   <div>
-    <%= form.submit "Save Equipment", class: "submit-button" %>
+    <%= form.submit "Save Vendor", class: "submit-button" %>
   </div>
 <% end %>

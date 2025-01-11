@@ -42,18 +42,20 @@ class EquipmentsController < ApplicationController
 
     equipment_params_without_quantity = equipment_params.except(:quantity) # Remove quantity from strong parameters
 
-    ActiveRecord::Base.transaction do
-      @equipments = []
-      quantity.times do
-        @equipments << Equipment.create!(equipment_params_without_quantity)
+    begin
+      ActiveRecord::Base.transaction do
+        @equipments = []
+        quantity.times do
+          @equipments << Equipment.create!(equipment_params_without_quantity)
+        end
       end
-    end
 
-    redirect_to equipments_path, notice: "#{quantity} Equipment record(s) created successfully!"
-  rescue ActiveRecord::RecordInvalid => e
-    @equipment = Equipment.new(equipment_params_without_quantity)
-    flash.now[:alert] = "Error creating equipment: #{e.message}"
-    render partial: "form", locals: { equipment: @equipment }
+      render json: { success: true, redirect_url: equipments_path, notice: "#{quantity} Equipment record(s) created successfully!" }
+    rescue ActiveRecord::RecordInvalid => e
+      @equipment = Equipment.new(equipment_params_without_quantity)
+      flash.now[:alert] = "Error creating equipment: #{e.message}"
+      render partial: "form", locals: { equipment: @equipment, form_url: equipments_path, show_quantity_field: true }, status: :unprocessable_entity
+    end
   end
 
   def edit
@@ -64,9 +66,9 @@ class EquipmentsController < ApplicationController
 
   def update
     if @equipment.update(equipment_params)
-      redirect_to @equipment, notice: "Equipment updated successfully!"
+      render json: { success: true, redirect_url: equipment_path(@equipment), notice: "Equipment updated successfully!" }
     else
-      render partial: "form", locals: { equipment: @equipment }
+      render partial: "form", locals: { equipment: @equipment, form_url: equipment_path(@equipment), show_quantity_field: false }, status: :unprocessable_entity
     end
   end
 

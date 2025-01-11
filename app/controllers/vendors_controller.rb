@@ -23,9 +23,9 @@ class VendorsController < ApplicationController
     @vendor = Vendor.new(vendor_params)
 
     if @vendor.save
-      redirect_to @vendor, notice: "Vendor added successfully!"
+      render json: { success: true, redirect_url: vendor_path(@vendor) }
     else
-      render partial: "form", locals: { vendor: @vendor }
+      render partial: "form", locals: { vendor: @vendor }, status: :unprocessable_entity
     end
   end
 
@@ -35,9 +35,9 @@ class VendorsController < ApplicationController
 
   def update
     if @vendor.update(vendor_params)
-      redirect_to @vendor, notice: "Vendor updated successfully!"
+      render json: { success: true, redirect_url: vendor_path(@vendor) }
     else
-      render partial: "form", locals: { vendor: @vendor }
+      render partial: "form", locals: { vendor: @vendor }, status: :unprocessable_entity
     end
   end
 

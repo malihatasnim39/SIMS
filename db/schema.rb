@@ -99,20 +99,11 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_01_083350) do
     t.unique_constraint ["Financial_Record_ID"], name: "Financial_Record_Financial_Record_ID_key"
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.string "title"
-    t.string "message"
-    t.integer "user_id"
-    t.string "status", default: "unread"
-    t.datetime "due_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "borrowing"
-  end
-
-  create_table "user_data", id: :uuid, default: nil, force: :cascade do |t|
-    t.boolean "is_supervisor", default: false, null: false
-    t.bigint "club_id"
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "user_id", limit: 2, null: false
+    t.text "message"
+    t.boolean "is_read", default: false
+    t.datetime "created_at", precision: nil, default: -> { "now()" }
   end
 
   create_table "vendors", primary_key: "Vendor_ID", id: :bigint, default: nil, force: :cascade do |t|

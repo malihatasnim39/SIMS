@@ -1,0 +1,7 @@
+<h1>Delete Confirmation</h1>
+<p>Are you sure you want to permanently delete this record?</p>
+
+<div>
+  <%= button_to 'Yes', financial_record_path(@financial_record), method: :delete, data: { turbo: false } %>
+  <%= button_to 'No', expense_details_financial_record_path(@financial_record), method: :get %>
+</div>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipments</title>
+  <%= stylesheet_link_tag 'application', media: 'all', data: { turbolinks: false } %>
+</head>
+<body>
+
+<header>
+  <%= image_tag 'back-icon.png', alt: 'Back', style: 'width: 20px; cursor: pointer;' %>
+  <div class="search-bar">
+    <%= form_with url: group_items_path(@equipment_name), method: :get, local: true, class: "search-form" do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search equipment...", class: "search-input" %>
+  </div>
+      <%= submit_tag "Search", class: "search-button" %>
+    <% end %>
+  <%= image_tag 'user-icon.png', alt: 'User', style: 'width: 20px; cursor: pointer;' %>
+</header>
+
+<div class="container">
+  <div class="sort">
+    <span>Sorted by Availability</span>
+    <span>
+      <%= image_tag 'filter-icon.png', alt: 'Filter', style: 'width: 20px;' %>
+    </span>
+  </div>
+  <% if @items.present? %>
+    <div class="cards">
+      <% @items.each do |item| %>
+        <div class="card">
+          <div class="card-content">
+            <div class="card-title"><%= item.Equipment_Name %></div>
+            <div class="details">
+              <!-- Add additional item details here if needed -->
+              <p>ID: <%= item.Equipment_ID %></p>
+            </div>
+          </div>
+          <%= link_to ">", item, class: "more-link" %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No items found in this group.</p>
+  <% end %>
+</div>
+
+<div class="footer">
+  <div class="btn active">
+    <%= link_to "Equipment", equipments_path, class: "move-link active" %>
+  </div>
+  <div class="btn">
+    <%= link_to "Borrow", vendors_path, class: "move-link" %>
+  </div>
+  <div class="btn">
+    <%= link_to "Vendor", vendors_path, class: "move-link" %>
+  </div>
+</div>
+
+</body>
+</html>

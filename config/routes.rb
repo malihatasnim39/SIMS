@@ -55,7 +55,12 @@ Rails.application.routes.draw do
       get :club_info
     end
   end
-  
+
+  resources :borrowings, only: [] do
+    member do
+      patch :return
+    end
+  end
 
   # Set the root route to the sign-in page
   root to: "auth#signin_new"

@@ -3,9 +3,11 @@ class BorrowingsController < ApplicationController
 
   # Index
   def index
-    @borrowings = Borrowing.includes(:equipment, :club)
-    @overdue = Borrowing.includes(:equipment, :club).where("due_date < ? AND status = ?", Date.today, "borrowed")
-    @borrowed = Borrowing.includes(:equipment, :club).where(status: "borrowed")
+    @overdue = Borrowing.where("due_date < ? AND status = ?", Date.today, "borrowed")
+                        .update_all(status: "overdue")
+
+    @borrowed = Borrowing.where(status: "borrowed")
+    @returned = Borrowing.where(status: "returned")
   end
 
   # Super Club Borrowings

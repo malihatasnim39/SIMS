@@ -1,14 +1,19 @@
+# app/models/borrowing.rb
 class Borrowing < ApplicationRecord
-  belongs_to :equipment, foreign_key: "equipment_id", class_name: "Equipment"
-  belongs_to :club, foreign_key: "club_id", class_name: "Club"
-
-  validates :equipment_id, :club_id, :borrow_date, :due_date, presence: true
-  validates :status, inclusion: { in: %w[borrowed returned overdue] }
-  before_save :ensure_due_date_is_date
-
-  private
-
-  def ensure_due_date_is_date
-    self.due_date = due_date.to_date if due_date.present?
+  # Custom getter for PostgreSQL enum
+  def status
+    read_attribute(:status)&.to_sym # Convert the database value to a symbol
   end
+
+  # Custom setter for PostgreSQL enum
+  def status=(value)
+    write_attribute(:status, value.to_s) # Convert the symbol or string to a string
+  end
+
+  # Scopes for easy querying
+  scope :borrowed, -> { where(status: "borrowed") }
+  scope :returned, -> { where(status: "returned") }
+  scope :overdue, -> { where(status: "overdue") }
+
+  belongs_to :equipment, foreign_key: "equipment_id", optional: true
 end

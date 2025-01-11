@@ -5,4 +5,5 @@ class Equipment < ApplicationRecord
   validates :Financial_Record_Id, presence: true
   validates :Club_ID, presence: true
   validates :Vendor_ID, presence: true
+  has_many :borrowings, foreign_key: "equipment_id"
 end

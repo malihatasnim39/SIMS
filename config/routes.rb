@@ -30,6 +30,8 @@ Rails.application.routes.draw do
   end
 
   get "/reports", to: "reports#index"
+  get "/reports/generate", to: "reports#generate", as: :generate_reports
+  get "/clubs/:id/sub_clubs", to: "clubs#sub_clubs"
 
 
   # Define the route for club_created

@@ -47,6 +47,11 @@ class ClubsController < ApplicationController
     redirect_to clubs_path, notice: "Club deleted successfully."
   end
 
+  def sub_clubs
+    @sub_clubs = Club.where(Parent_Club: params[:id])
+    render json: @sub_clubs
+  end
+
   def create
     @club = Club.new(club_params)
     if @club.save

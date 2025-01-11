@@ -9,11 +9,6 @@ class ClubsController < ApplicationController
     @total_budget = @clubs.sum(:Budget)
   end
 
-  def show
-    @club = Club.find(params[:id])
-    render partial: "club_details", locals: { club: @club }
-  end
-
   def show_children
     @parent_club = Club.find(params[:id])
     @child_clubs = Club.where(Parent_Club: @parent_club.Club_ID)
@@ -28,7 +23,6 @@ class ClubsController < ApplicationController
   def edit
     @club = Club.find(params[:id])
     @super_clubs = Club.where(Is_Super_Club: true)
-    render partial: "edit_form", locals: { club: @club }
   end
 
   def update
@@ -44,7 +38,7 @@ class ClubsController < ApplicationController
   def create
     @club = Club.new(club_params)
     if @club.save
-      redirect_to club_created_path
+      redirect_to clubs_path, notice: "Club created successfully."
     else
       if @club.Is_Super_Club
         render :new_super_club, status: :unprocessable_entity
@@ -58,6 +52,6 @@ class ClubsController < ApplicationController
   private
 
   def club_params
-    params.require(:club).permit(:Is_Super_Club, :Club_Name, :Parent_Club, :Budget)
+    params.require(:club).permit(:Club_Name, :Parent_Club, :Budget).merge(Is_Super_Club: params[:club][:Is_Super_Club] || false)
   end
 end

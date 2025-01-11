@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "reports/index"
   resources :borrowings do
     collection do
       get :super_club_borrowings
@@ -27,6 +28,9 @@ Rails.application.routes.draw do
       get :new_sub_club
     end
   end
+
+  get "/reports", to: "reports#index"
+
 
   # Define the route for club_created
   get "club_created", to: "clubs#club_created", as: :club_created

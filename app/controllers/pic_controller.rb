@@ -24,4 +24,22 @@ class PicController < ApplicationController
 
     render "auth/PIC/dashboard"
   end
+
+  def borrowed_items
+    @club_id = session[:club_id]
+
+    # Fetch all borrowings for the club
+    @borrowed_items = Borrowing.where(club_id: @club_id).includes(:equipment).order(created_at: :desc)
+
+    render "auth/PIC/borrowed_items"
+  end
+
+  def balance_sheet
+    @club_id = session[:club_id]
+
+    # Fetch balance sheet data (this can be based on your actual logic)
+    @balance_sheet_data = FinancialRecord.where(club_id: @club_id).order(created_at: :desc)
+
+    render "auth/PIC/balance_sheet"
+  end
 end

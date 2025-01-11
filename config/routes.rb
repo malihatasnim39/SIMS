@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   # Dashboard routes
   get "supervisor/dashboard", to: "supervisor#dashboard", as: :supervisor_dashboard
   get "PIC/dashboard", to: "pic#dashboard", as: :pic_dashboard
+  get "PIC/borrowed_items", to: "pic#borrowed_items", as: :pic_borrowed_items
+  get "PIC/balance_sheet", to: "pic#balance_sheet", as: :pic_balance_sheet
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

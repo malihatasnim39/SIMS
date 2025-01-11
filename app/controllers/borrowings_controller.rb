@@ -3,23 +3,23 @@ class BorrowingsController < ApplicationController
   before_action :set_club, only: [ :balance_sheet ]
 
   def index
-    # Update overdue records before fetching them
-    Borrowing.where("due_date < ? AND status = ?", Date.today, "borrowed").update_all(status: "overdue")
-
-    # Fetch the updated records
+    Borrowing.where("due_date < ? AND status = ?", Date.today, "borrowed")
+             .update_all(status: "overdue")
     @borrowings = Borrowing.includes(:equipment, :club)
     @overdue = Borrowing.includes(:equipment, :club).where(status: "overdue")
-    @borrowed = Borrowing.includes(:equipment, :club).where(status: "borrowed")
+    @borrowed = Borrowing.includes(:equipment, :club).where(status: [ "borrowed", "overdue" ])
   end
 
   def super_club_borrowings
     @super_clubs = Club.where(Is_Super_Club: true)
-    @super_club_borrowings = Borrowing.includes(:equipment, :club).where(club_id: @super_clubs.pluck(:Club_ID))
+    @super_club_borrowings = Borrowing.includes(:equipment, :club)
+                                       .where(club_id: @super_clubs.pluck(:Club_ID))
   end
 
   def sub_club_borrowings
     @sub_clubs = Club.where(Is_Super_Club: false)
-    @sub_club_borrowings = Borrowing.includes(:equipment, :club).where(club_id: @sub_clubs.pluck(:Club_ID))
+    @sub_club_borrowings = Borrowing.includes(:equipment, :club)
+                                     .where(club_id: @sub_clubs.pluck(:Club_ID))
   end
 
   def balance_sheet
@@ -43,68 +43,69 @@ class BorrowingsController < ApplicationController
 
   def create
     @borrowing = Borrowing.new(borrowing_params)
-    equipment = Equipment.find(@borrowing.equipment_id)
+    equipment = Equipment.find_by(Equipment_ID: @borrowing.equipment_id)
 
-    if equipment.stock >= @borrowing.quantity
-      if @borrowing.save
-        equipment.update(stock: equipment.stock - @borrowing.quantity)
-        redirect_to borrowing_notification_path, notice: "Borrowing record created successfully."
-      else
-        @equipments = Equipment.all
-        @clubs = Club.all
-        redirect_to borrowing_notification_path, alert: "Failed to create borrowing record."
-      end
-    else
+    if equipment.nil?
+      redirect_to new_borrowing_path, alert: "Selected equipment does not exist."
+      return
+    end
+
+    if equipment.stock.nil? || equipment.stock < @borrowing.quantity
       redirect_to borrowing_notification_path, alert: "Not enough stock available for the selected item."
+      return
+    end
+
+    if @borrowing.save
+      equipment.update(stock: equipment.stock - @borrowing.quantity)
+      redirect_to borrowings_path, notice: "Borrowing record created successfully."
+    else
+      redirect_to borrowing_notification_path, alert: "Failed to create borrowing record. Please try again."
     end
   end
 
   def edit
-    @equipments = Equipment.all
-    @clubs = Club.all
+    @borrowed = Borrowing.find_by(id: params[:id])
+    if @borrowed.nil?
+      redirect_to borrowings_path, alert: "Borrowing record not found."
+    else
+      @equipments = Equipment.all
+      @clubs = Club.all
+    end
   end
 
   def update
     old_quantity = @borrowing.quantity
     old_equipment = @borrowing.equipment
     new_quantity = borrowing_params[:quantity].to_i
-    new_equipment = Equipment.find(borrowing_params[:equipment_id])
+    new_equipment = Equipment.find_by(Equipment_ID: borrowing_params[:equipment_id])
+
+    if new_equipment.nil?
+      redirect_to borrowing_notification_path, alert: "Selected equipment does not exist."
+      return
+    end
 
     available_stock = if old_equipment == new_equipment
-                        new_equipment.stock + old_quantity
+                        (new_equipment.stock || 0) + old_quantity
     else
-                        new_equipment.stock
+                        new_equipment.stock || 0
     end
 
     if new_quantity > available_stock
       redirect_to borrowing_notification_path, alert: "Not enough stock available for the selected item. Update failed."
     else
       if @borrowing.update(borrowing_params)
-        # Restore stock for old equipment if it was changed
-        old_equipment.update(stock: old_equipment.stock + old_quantity) if old_equipment && old_equipment != new_equipment
-        # Reduce stock for new equipment
-        new_equipment.update(stock: new_equipment.stock - new_quantity)
-        redirect_to borrowing_notification_path, notice: "Borrowing record updated successfully."
+        old_equipment.update(stock: (old_equipment.stock || 0) + old_quantity) if old_equipment && old_equipment != new_equipment
+        new_equipment.update(stock: (new_equipment.stock || 0) - new_quantity)
+        redirect_to borrowings_path, notice: "Borrowing record updated successfully."
       else
-        @equipments = Equipment.all
-        @clubs = Club.all
-        redirect_to borrowing_notification_path, alert: @borrowing.errors.full_messages.to_sentence
+        redirect_to borrowing_notification_path, alert: "Failed to update borrowing record. Please try again."
       end
     end
   end
 
   def destroy
-    ActiveRecord::Base.transaction do
-      # Delete all notifications related to this borrowing
-      Notification.where(borrowing_id: @borrowing.id).destroy_all
-
-      # Now safely delete the borrowing
-      @borrowing.destroy
-    end
-
-    redirect_to borrowing_notification_path, notice: "Borrowing record and associated notifications deleted successfully."
-  rescue ActiveRecord::RecordInvalid => e
-    redirect_to borrowing_notification_path, alert: "Failed to delete borrowing: #{e.message}"
+    @borrowing.destroy
+    redirect_to borrowings_path, notice: "Borrowing record deleted successfully."
   end
 
   def equipment_by_club
@@ -121,7 +122,10 @@ class BorrowingsController < ApplicationController
   private
 
   def set_borrowing
-    @borrowing = Borrowing.find(params[:id])
+    @borrowing = Borrowing.find_by(id: params[:id])
+    unless @borrowing
+      redirect_to borrowings_path, alert: "Borrowing record not found."
+    end
   end
 
   def set_club

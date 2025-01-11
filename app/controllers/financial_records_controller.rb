@@ -7,9 +7,9 @@ class FinancialRecordsController < ApplicationController
     sort_column = case params[:sort]
     when "amount_asc" then '"Amount" ASC'
     when "amount_desc" then '"Amount" DESC'
-    when "date_asc" then '"Created_At" ASC'
-    when "date_desc" then '"Created_At" DESC'
-    else '"Created_At" DESC' # Default sorting
+    when "date_asc" then '"created_at" ASC'
+    when "date_desc" then '"created_at" DESC'
+    else '"created_at" DESC' # Default sorting
     end
 
     @financial_records = FinancialRecord.includes(:club).order(Arel.sql(sort_column))

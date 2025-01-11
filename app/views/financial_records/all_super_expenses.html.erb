@@ -40,7 +40,7 @@
           <td><%= expense.vendor&.Name || "N/A" %></td>
           <td><%= expense.club&.Club_Name || "N/A" %></td>
           <td><%= number_to_currency(expense.Amount, unit: "RM") %></td>
-          <td><%= expense.Created_At.strftime("%d/%m/%Y") %></td>
+          <td><%= expense.created_at.strftime("%d/%m/%Y") %></td>
         </tr>
       <% end %>
     </tbody>

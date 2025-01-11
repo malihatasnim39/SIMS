@@ -42,7 +42,7 @@
             <td><%= record.Quantity %></td>
             <td><%= record.club&.Club_Name || "N/A" %></td>
             <td><%= number_to_currency(record.Amount, unit: "RM") %></td>
-            <td><%= record.Created_At.strftime("%d/%m/%Y") %></td>
+            <td><%= record.created_at.strftime("%d/%m/%Y") %></td>
           </tr>
         <% end %>
       </tbody>

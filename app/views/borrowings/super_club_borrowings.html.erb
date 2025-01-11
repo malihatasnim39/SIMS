@@ -7,18 +7,12 @@
     <div class="user-icon">👤</div>
   </header>
 
-  <h2 class="page-title">Super Club Borrowing Records</h2>
-
-  <div class="borrowed-list">
-    <% @super_club_borrowings.each do |item| %>
-      <div class="card">
-        <div class="card-content">
-          <p class="item-name"><strong><%= item.equipment&.Equipment_Name %></strong></p>
-          <p class="borrower-name">Borrowed by: <%= item.club&.Club_Name %></p>
-          <p class="borrow-period">
-            <%= item.borrow_date.strftime('%d/%m/%Y') %> - <%= item.due_date.strftime('%d/%m/%Y') %>
-          </p>
-        </div>
+  <h2>Super Clubs Borrowing Records</h2>
+  <div class="club-list">
+    <% @super_clubs.each do |club| %>
+      <div class="club-card">
+        <p><strong><%= club.Club_Name %></strong></p>
+        <%= link_to "→", borrowing_balance_sheet_path(club.id), class: "btn-view-more" %>
       </div>
     <% end %>
   </div>

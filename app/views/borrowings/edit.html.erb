@@ -1,44 +1,59 @@
 <div class="frame">
   <header class="header">
-    <button class="back-btn">←</button>
+    <button class="back-btn" onclick="history.back()">←</button>
     <div class="search-bar">
       <input type="text" id="search" placeholder="Search">
     </div>
     <div class="user-icon">👤</div>
   </header>
 
-  <!-- Edit Borrowing Record Form -->
   <h2 class="page-title">Update Borrowing</h2>
-  <%= form_with model: @borrowing, local: true, class: "edit-borrowing-form" do |form| %>
-    <div>
-      <%= form.label :equipment_id, "Name of Item" %>
-      <%= form.collection_select :equipment_id, @equipments, :id, :Equipment_Name, { prompt: "Select Equipment" }, class: "form-input" %>
-    </div>
-
+  <%= form_with(model: @borrowing, local: true, class: "edit-borrowing-form") do |form| %>
+    <!-- Club Selection -->
     <div class="form-row">
-      <%= form.label :club_id, "Club" %>
-      <%= form.collection_select :club_id, @clubs, :Club_ID, :Club_Name, { prompt: "Select Club" }, class: "form-input" %>
+      <%= form.label :club_id, "Club", class: "form-label" %>
+      <%= form.collection_select :club_id, @clubs, :Club_ID, :Club_Name, { prompt: "Select Club" }, { class: "form-input" } %>
     </div>
 
+    <!-- Equipment Selection -->
     <div class="form-row">
-      <%= form.label :borrow_date, "Borrow Date" %>
-      <%= form.date_field :borrow_date, class: "form-input" %>
+      <%= form.label :equipment_id, "Name of Item", class: "form-label" %>
+      <select id="equipment-select" name="borrowing[equipment_id]" class="form-input">
+        <option value="">Select Equipment</option>
+        <% @equipments.each do |equipment| %>
+          <option value="<%= equipment.Equipment_ID %>" <%= "selected" if equipment.Equipment_ID == @borrowing.equipment_id %>>
+            <%= equipment.Equipment_Name %> (Stock: <%= equipment.stock || 0 %>)
+          </option>
+        <% end %>
+      </select>
     </div>
 
+    <!-- Quantity Input -->
     <div class="form-row">
-      <%= form.label :due_date, "Due Date" %>
-      <%= form.date_field :due_date, class: "form-input" %>
+      <%= form.label :quantity, "Quantity", class: "form-label" %>
+      <%= form.text_field :quantity, value: @borrowing.quantity, class: "form-input", inputmode: "numeric", pattern: "[0-9]*" %>
     </div>
 
+    <!-- Borrow Date Input -->
+    <div class="form-row">
+      <%= form.label :borrow_date, "Borrow Date", class: "form-label" %>
+      <%= form.date_field :borrow_date, value: @borrowing.borrow_date.to_date, class: "form-input" %>
+    </div>
+
+    <!-- Due Date Input -->
+    <div class="form-row">
+      <%= form.label :due_date, "Due Date", class: "form-label" %>
+      <%= form.date_field :due_date, value: @borrowing.due_date.to_date, class: "form-input" %>
+    </div>
+
+    <!-- Buttons -->
     <div class="form-actions">
-      <%= link_to "Delete Borrowing", borrowing_path(@borrowing), method: :delete, class: "btn-delete", data: { confirm: "Are you sure?" } %>
       <%= form.submit "Update Borrowing", class: "btn-submit" %>
     </div>
   <% end %>
-</div>
 
-<footer class="footer-nav">
-  <button class="footer-btn">Equipment</button>
-  <button class="footer-btn active">Borrow</button>
-  <button class="footer-btn">Vendors</button>
-</footer>
+  <!-- Delete Borrowing Button -->
+  <div class="form-actions">
+    <%= button_to "Delete Borrowing", borrowing_path(@borrowing), method: :delete, class: "btn-delete", data: { confirm: "Are you sure you want to delete this borrowing record?" } %>
+  </div>
+</div>
